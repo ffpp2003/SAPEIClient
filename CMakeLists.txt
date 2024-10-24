@@ -1,0 +1,71 @@
+cmake_minimum_required(VERSION 3.5)
+
+# Establece el nombre del proyecto
+project(SAPEI)
+
+# Encuentra la biblioteca Qt
+find_package(Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt5 COMPONENTS SerialPort REQUIRED)
+find_package(SQLite3 REQUIRED)
+
+# Agrega los archivos fuente y encabezados
+set(SOURCES
+    main.cpp
+    mainwindow.cpp
+    serialhandler.cpp
+    addcarddialog.cpp
+    lib/SAPEICore/Client.cpp
+    lib/SAPEICore/Person.cpp
+    lib/SAPEICore/Vehicle.cpp
+    lib/SAPEICore/DataBase.cpp
+)
+
+set(HEADERS
+    mainwindow.h
+    addcarddialog.h
+    serialhandler.h
+    lib/SAPEICore/Client.h
+    lib/SAPEICore/Person.h
+    lib/SAPEICore/Vehicle.h
+    lib/SAPEICore/DataBase.h
+)
+
+# Define el ejecutable
+add_executable(SAPEI ${SOURCES} ${HEADERS} mainwindow.ui)
+
+# Establece la configuración de la interfaz de usuario
+set_target_properties(SAPEI PROPERTIES
+    AUTOMOC TRUE
+    AUTOUIC TRUE
+    SKIP_AUTOMOC FALSE
+)
+
+# Añade las bibliotecas de Qt al ejecutable
+target_link_libraries(SAPEI PRIVATE 
+    Qt5::Widgets
+    Qt5::SerialPort
+)
+
+# Establecer las rutas para la biblioteca SQLite3
+target_include_directories(SAPEI PRIVATE ${SQLite3_INCLUDE_DIRS})
+target_link_libraries(SAPEI PRIVATE ${SQLite3_LIBRARIES})
+
+# Agregar flags para errores y advertencias
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(SAPEI PRIVATE 
+        -Wall              # Activa todas las advertencias
+        -Wextra           # Activa advertencias adicionales
+        -Wpedantic        # Activa advertencias de estándares
+        -Werror           # Tratar advertencias como errores
+    )
+else()
+    target_compile_options(SAPEI PRIVATE 
+        -Wall              # Activa todas las advertencias
+        -Wextra           # Activa advertencias adicionales
+        -Wconversion
+        -pedantic-errors
+    )
+endif()
+
+# Para habilitar soporte para C++11 o superior (ajusta según sea necesario)
+set_target_properties(SAPEI PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED ON)
