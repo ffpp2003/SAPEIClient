@@ -69,3 +69,14 @@ endif()
 
 # Para habilitar soporte para C++11 o superior (ajusta según sea necesario)
 set_target_properties(SAPEI PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED ON)
+
+
+# Configuración de dependencias
+if(UNIX)
+ # Crear objetivo 'dependencies' solo para entornos Unix (Linux/macOS)
+    add_custom_target(dependencies
+        COMMAND bash ${CMAKE_SOURCE_DIR}/install_dependencies.sh
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Instalando dependencias para Linux/macOS..."
+    )
+endif()

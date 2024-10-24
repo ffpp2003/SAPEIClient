@@ -11,6 +11,33 @@ Asegúrate de tener instalados los siguientes paquetes antes de compilar:
 - Qt5
 - SQLite3
 
+para instalar las dependencias:
+```bash
+
+#crear un directorio build (si no exsite)
+mkdir build
+
+# Moverse al directorio build
+cd build
+
+# Configurar el proyecto con CMake
+cmake ..
+
+#instalar las dependencias:
+make dependencies
+```
+O para instalarlas manualmente:
+
+```bash
+
+sudo apt update
+
+sudo apt install -y cmake make libsqlite3-dev qtbase5-dev qtchooser libqt5serialport5-dev
+
+```
+
+
+
 ## Compilación
 
 Sigue estos pasos para compilar el proyecto:
