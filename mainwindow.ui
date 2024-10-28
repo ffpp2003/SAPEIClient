@@ -23,6 +23,13 @@
      </widget>
     </item>
     <item>
+     <widget class="QPushButton" name="addVehicleButton">
+      <property name="text">
+       <string>Agregar vehiculo</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QPushButton" name="selectSerialPortButton">
       <property name="text">
        <string>Seleccionar Puerto Serie</string>
