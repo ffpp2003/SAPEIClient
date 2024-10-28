@@ -14,6 +14,7 @@ set(SOURCES
     mainwindow.cpp
     serialhandler.cpp
     addcarddialog.cpp
+    addvehicledialog.cpp
     lib/SAPEICore/Client.cpp
     lib/SAPEICore/Person.cpp
     lib/SAPEICore/Vehicle.cpp
@@ -22,8 +23,9 @@ set(SOURCES
 
 set(HEADERS
     mainwindow.h
-    addcarddialog.h
     serialhandler.h
+    addcarddialog.h
+    addvehicledialog.h
     lib/SAPEICore/Client.h
     lib/SAPEICore/Person.h
     lib/SAPEICore/Vehicle.h

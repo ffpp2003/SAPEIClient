@@ -53,6 +53,9 @@ public:
      * @param id Cadena de texto con el ID de la tarjeta.
      */
     void addCard(const QString &id);
+    
+
+    void addVehicleToClient();
 
 private slots:
     /**
@@ -60,6 +63,8 @@ private slots:
      */
     void on_addCardButton_clicked();
 
+
+    void onAddVehicleButtonClicked();  // Declara el slot para abrir el diálogo de vehículo
     /**
      * @brief Slot que maneja el evento cuando se recibe un ID desde el puerto serie.
      * @param id Cadena de texto con el ID recibido.
