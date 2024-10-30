@@ -11,6 +11,8 @@
 #include <QLineEdit>        
 #include <cstdint>
 #include <QMovie>
+#include <QTimer>
+#include <QGraphicsView>
 
 MainWindow::MainWindow(QWidget *parent)
    : QMainWindow(parent), ui(new Ui::MainWindow), serialHandler(new SerialHandler(this)), isAddingCardMode(false),isChargingMode(false) {
@@ -33,6 +35,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->addVehicleButton, &QPushButton::clicked, this, &MainWindow::onAddVehicleButtonClicked);
     connect(ui->clientListButton, &QPushButton::clicked, this, &MainWindow::onClientListButtonClicked);
     
+    QTimer *connectionStatusTimer = new QTimer(this);
+    connect(connectionStatusTimer, &QTimer::timeout, this, &MainWindow::updateConnectionStatus);
+    connectionStatusTimer->start(1000);
 }
 
 MainWindow::~MainWindow() {
@@ -41,6 +46,15 @@ MainWindow::~MainWindow() {
 
 void MainWindow::onSelectSerialPortClicked() {
     serialHandler->selectSerialPort();
+}
+
+void MainWindow::updateConnectionStatus() {
+    // Verifica el estado de conexión a través de SerialHandler
+    if (serialHandler->isConnected()) {
+        ui->connectionStatusView->setStyleSheet("background-color: green;"); // Conectado: verde
+    } else {
+        ui->connectionStatusView->setStyleSheet("background-color: red;"); // Desconectado: rojo
+    }
 }
 
 void MainWindow::on_addCardButton_clicked() {
