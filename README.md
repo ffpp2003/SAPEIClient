@@ -33,7 +33,7 @@ O para instalarlas manualmente:
 
 sudo apt update
 
-sudo apt install -y cmake make libsqlite3-dev qtbase5-dev qtchooser libqt5serialport5-dev qt3d5-dev-tools 
+sudo apt install -y cmake make libsqlite3-dev qtbase5-dev qtchooser libqt5serialport5-dev
 
 
 ```
