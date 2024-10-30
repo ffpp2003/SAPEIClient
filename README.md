@@ -9,7 +9,6 @@ Asegúrate de tener instalados los siguientes paquetes antes de compilar:
 - CMake (versión mínima: 3.5)
 - Make
 - Qt5
-- Qt5 3D
 - SQLite3
 
 

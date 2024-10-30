@@ -15,6 +15,11 @@
 MainWindow::MainWindow(QWidget *parent)
    : QMainWindow(parent), ui(new Ui::MainWindow), serialHandler(new SerialHandler(this)), isAddingCardMode(false),isChargingMode(false) {
     ui->setupUi(this);
+    
+    QMovie *movie = new QMovie(":/utnlogo.gif"); // Reemplaza con la ruta de tu GIF
+    ui->utnLogo->setMovie(movie);
+    movie->start(); // Iniciar la animación
+    ui->utnLogo->setScaledContents(true); // Permitir que el QLabel ajuste su contenido
    
     try {
         db = new DataBase("database.db"); // Cambia "database.db" por la ruta que desees
@@ -28,10 +33,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->addVehicleButton, &QPushButton::clicked, this, &MainWindow::onAddVehicleButtonClicked);
     connect(ui->clientListButton, &QPushButton::clicked, this, &MainWindow::onClientListButtonClicked);
     
-    QMovie *movie = new QMovie(":/utnlogo.gif"); // Reemplaza con la ruta de tu GIF
-    ui->utnLogo->setMovie(movie);
-    movie->start(); // Iniciar la animación
-    ui->utnLogo->setScaledContents(true); // Permitir que el QLabel ajuste su contenido
 }
 
 MainWindow::~MainWindow() {
