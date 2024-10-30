@@ -6,7 +6,8 @@
 if [ -x "$(command -v apt)" ]; then
     echo "Detectado sistema Ubuntu/Debian, instalando dependencias..."
     sudo apt update
-    sudo apt install -y cmake make libsqlite3-dev qtbase5-dev qtchooser libqt5serialport5-dev
+    sudo apt install -y cmake make libsqlite3-dev qtbase5-dev qtchooser libqt5serialport5-dev qt3d5-dev-tools 
+
 
 # Arch Linux
 elif [ -x "$(command -v pacman)" ]; then

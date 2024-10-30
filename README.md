@@ -9,7 +9,9 @@ Asegúrate de tener instalados los siguientes paquetes antes de compilar:
 - CMake (versión mínima: 3.5)
 - Make
 - Qt5
+- Qt5 3D
 - SQLite3
+
 
 para instalar las dependencias:
 ```bash
@@ -32,7 +34,8 @@ O para instalarlas manualmente:
 
 sudo apt update
 
-sudo apt install -y cmake make libsqlite3-dev qtbase5-dev qtchooser libqt5serialport5-dev
+sudo apt install -y cmake make libsqlite3-dev qtbase5-dev qtchooser libqt5serialport5-dev qt3d5-dev-tools 
+
 
 ```
 
