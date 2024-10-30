@@ -10,10 +10,16 @@
 #include <QInputDialog>    
 #include <QLineEdit>        
 #include <cstdint>
+#include <QMovie>
 
 MainWindow::MainWindow(QWidget *parent)
    : QMainWindow(parent), ui(new Ui::MainWindow), serialHandler(new SerialHandler(this)), isAddingCardMode(false),isChargingMode(false) {
     ui->setupUi(this);
+    
+    QMovie *movie = new QMovie(":/utnlogo.gif"); // Reemplaza con la ruta de tu GIF
+    ui->utnLogo->setMovie(movie);
+    movie->start(); // Iniciar la animación
+    ui->utnLogo->setScaledContents(true); // Permitir que el QLabel ajuste su contenido
    
     try {
         db = new DataBase("database.db"); // Cambia "database.db" por la ruta que desees
@@ -25,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->selectSerialPortButton, &QPushButton::clicked, this, &MainWindow::onSelectSerialPortClicked);
     connect(serialHandler, &SerialHandler::idReceived, this, &MainWindow::onIdReceived);
     connect(ui->addVehicleButton, &QPushButton::clicked, this, &MainWindow::onAddVehicleButtonClicked);
+    connect(ui->clientListButton, &QPushButton::clicked, this, &MainWindow::onClientListButtonClicked);
+    
 }
 
 MainWindow::~MainWindow() {
@@ -49,6 +57,13 @@ void MainWindow::on_addCardButton_clicked() {
 void MainWindow::onAddVehicleButtonClicked()
 {
     addVehicleToClient();  // Llama a la función que muestra el diálogo de vehículo
+}
+
+void MainWindow::onClientListButtonClicked()
+{
+    // Crear un objeto de ClientListDialog y pasarlo al database para obtener los clientes
+    ClientListDialog dialog(db, this);
+    dialog.exec();
 }
 
 bool MainWindow::validateId(const QString &id) {

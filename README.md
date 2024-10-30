@@ -11,6 +11,7 @@ Asegúrate de tener instalados los siguientes paquetes antes de compilar:
 - Qt5
 - SQLite3
 
+
 para instalar las dependencias:
 ```bash
 
@@ -33,6 +34,7 @@ O para instalarlas manualmente:
 sudo apt update
 
 sudo apt install -y cmake make libsqlite3-dev qtbase5-dev qtchooser libqt5serialport5-dev
+
 
 ```
 
