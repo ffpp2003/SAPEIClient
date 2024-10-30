@@ -13,6 +13,7 @@
 #include <QListWidget>  // Añade soporte para la lista de widgets
 #include <QListWidgetItem>  // Soporte para los elementos de la lista
 #include "serialhandler.h"
+#include "clientlistdialog.h"
 #include "lib/SAPEICore/DataBase.h"
 
 QT_BEGIN_NAMESPACE
@@ -75,6 +76,7 @@ private slots:
      * @brief Slot que maneja la selección del puerto serie.
      */
     void onSelectSerialPortClicked();
+    void onClientListButtonClicked();  // Declara el slot
 
 private:
     SerialHandler *serialHandler; ///< Manejador de comunicación serial.
