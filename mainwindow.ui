@@ -6,35 +6,98 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>772</width>
+    <height>506</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Card Manager</string>
+   <string>SAPEI</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+    QMainWindow {
+        background-color: #121212;
+        color: #ffffff;
+        border-color: rgb(0, 0, 0);
+    }
+    QPushButton {
+        background-color: #2d2d2d;
+        color: #ffffff;
+        border: 1px solid #3c3c3c;
+        padding: 5px;
+        border-radius: 4px;
+    }
+    QPushButton:hover {
+        background-color: #3c3c3c;
+    }
+    QTextBrowser {
+        background-color: #1e1e1e;
+        color: #ffffff;
+        border: 1px solid #3c3c3c;
+    }
+    QGraphicsView {
+        background-color: #1e1e1e;
+        border: 1px solid #3c3c3c;
+    }
+   </string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QPushButton" name="addCardButton">
-      <property name="text">
-       <string>Agregar Tarjeta</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="selectSerialPortButton">
-      <property name="text">
-       <string>Seleccionar Puerto Serie</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="clientListButton">
-      <property name="text">
-       <string>Mostrar Clientes</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <layout class="QVBoxLayout" name="buttonLayout">
+        <item>
+         <widget class="QPushButton" name="addCardButton">
+          <property name="text">
+           <string>Agregar Tarjeta</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="addVehicleButton">
+          <property name="text">
+           <string>Agregar Vehículo</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="selectSerialPortButton">
+          <property name="text">
+           <string>Seleccionar Puerto Serie</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="clientListButton">
+          <property name="text">
+           <string>Mostrar Clientes</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QGraphicsView" name="connectionStatusView">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>150</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Estado de Conexión</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="utnLogo">
+        <property name="toolTip">
+         <string>Logo Animado</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="QTextBrowser" name="textBrowser"/>
@@ -46,12 +109,32 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>772</width>
      <height>20</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">
+     QMenuBar {
+         background-color: #121212;
+         color: #ffffff;
+     }
+     QMenuBar::item:selected {
+         background-color: #3c3c3c;
+     }
+    </string>
+   </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="styleSheet">
+    <string notr="true">
+     QStatusBar {
+         background-color: #121212;
+         color: #ffffff;
+     }
+    </string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

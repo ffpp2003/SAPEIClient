@@ -4,8 +4,7 @@ cmake_minimum_required(VERSION 3.5)
 project(SAPEI)
 
 # Encuentra la biblioteca Qt
-find_package(Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt5 COMPONENTS SerialPort REQUIRED)
+find_package(Qt5 REQUIRED COMPONENTS Widgets SerialPort)
 find_package(SQLite3 REQUIRED)
 
 # Agrega los archivos fuente y encabezados
@@ -14,6 +13,9 @@ set(SOURCES
     mainwindow.cpp
     serialhandler.cpp
     addcarddialog.cpp
+    addvehicledialog.cpp
+    clientlistdialog.cpp
+    vehiclelistdialog.cpp 
     lib/SAPEICore/Client.cpp
     lib/SAPEICore/Person.cpp
     lib/SAPEICore/Vehicle.cpp
@@ -22,16 +24,27 @@ set(SOURCES
 
 set(HEADERS
     mainwindow.h
-    addcarddialog.h
     serialhandler.h
+    addcarddialog.h
+    addvehicledialog.h
+    clientlistdialog.h
+    vehiclelistdialog.h 
     lib/SAPEICore/Client.h
     lib/SAPEICore/Person.h
     lib/SAPEICore/Vehicle.h
     lib/SAPEICore/DataBase.h
 )
 
+# Añade la ruta del archivo .qrc
+set(RESOURCE_FILES
+    resources.qrc
+)
+
+# Genera el archivo de encabezado de recursos
+qt5_add_resources(RESOURCE_GENERATED_CPP ${RESOURCE_FILES})
+
 # Define el ejecutable
-add_executable(SAPEI ${SOURCES} ${HEADERS} mainwindow.ui)
+add_executable(SAPEI ${SOURCES} ${HEADERS} ${RESOURCE_GENERATED_CPP} mainwindow.ui)
 
 # Establece la configuración de la interfaz de usuario
 set_target_properties(SAPEI PROPERTIES
@@ -69,7 +82,6 @@ endif()
 
 # Para habilitar soporte para C++11 o superior (ajusta según sea necesario)
 set_target_properties(SAPEI PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED ON)
-
 
 # Configuración de dependencias
 if(UNIX)

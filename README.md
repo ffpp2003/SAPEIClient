@@ -11,6 +11,7 @@ Asegúrate de tener instalados los siguientes paquetes antes de compilar:
 - Qt5
 - SQLite3
 
+
 para instalar las dependencias:
 ```bash
 

@@ -1,17 +1,25 @@
 #include "mainwindow.h"
 #include "addcarddialog.h"
+#include "addvehicledialog.h"
 #include "lib/SAPEICore/Client.h"
 #include "lib/SAPEICore/DataBase.h"
 #include "serialhandler.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <QDebug>
+#include <QInputDialog>    
+#include <QLineEdit>        
 #include <cstdint>
-
+#include <QMovie>
 
 MainWindow::MainWindow(QWidget *parent)
    : QMainWindow(parent), ui(new Ui::MainWindow), serialHandler(new SerialHandler(this)), isAddingCardMode(false),isChargingMode(false) {
     ui->setupUi(this);
+    
+    QMovie *movie = new QMovie(":/utnlogo.gif"); // Reemplaza con la ruta de tu GIF
+    ui->utnLogo->setMovie(movie);
+    movie->start(); // Iniciar la animación
+    ui->utnLogo->setScaledContents(true); // Permitir que el QLabel ajuste su contenido
    
     try {
         db = new DataBase("database.db"); // Cambia "database.db" por la ruta que desees
@@ -22,27 +30,23 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->selectSerialPortButton, &QPushButton::clicked, this, &MainWindow::onSelectSerialPortClicked);
     connect(serialHandler, &SerialHandler::idReceived, this, &MainWindow::onIdReceived);
+    connect(ui->addVehicleButton, &QPushButton::clicked, this, &MainWindow::onAddVehicleButtonClicked);
+    connect(ui->clientListButton, &QPushButton::clicked, this, &MainWindow::onClientListButtonClicked);
+    
 }
-
-
 
 MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::onSelectSerialPortClicked()
-{
-    // Llamar al método para seleccionar el puerto serie
+void MainWindow::onSelectSerialPortClicked() {
     serialHandler->selectSerialPort();
 }
 
-
 void MainWindow::on_addCardButton_clicked() {
-    // Cambia a modo de agregar tarjeta
     isAddingCardMode = true;
     ui->textBrowser->append("Modo de agregar tarjeta activado. Escanee una tarjeta...");
 
-    // Asegúrate de que el puerto serie esté abierto después de la selección
     if (serialHandler->isConnected()) {
         qDebug() << "Puerto serie conectado correctamente";
     } else {
@@ -50,42 +54,50 @@ void MainWindow::on_addCardButton_clicked() {
     }
 }
 
+void MainWindow::onAddVehicleButtonClicked()
+{
+    addVehicleToClient();  // Llama a la función que muestra el diálogo de vehículo
+}
+
+void MainWindow::onClientListButtonClicked()
+{
+    // Crear un objeto de ClientListDialog y pasarlo al database para obtener los clientes
+    ClientListDialog dialog(db, this);
+    dialog.exec();
+}
 
 bool MainWindow::validateId(const QString &id) {
     if (id.length() != 8) {
-        qDebug() << "ID no válido";  // Mensaje de depuración
-        return false;  // ID no válido
+        qDebug() << "ID no válido";  
+        return false;  
     }
-    return true;  // ID válido
+    return true;  
 }
 
 void MainWindow::onIdReceived(const QString &id) {
-  qDebug() << "ID recibido";  // Mensaje de depuración
-  currentId = id;  // Almacena el ID recibido
+  qDebug() << "ID recibido";  
+  currentId = id;  
 
-  // Llama al método de validación
   if (validateId(currentId)) {
     ui->textBrowser->append("ID recibido: " + currentId);
 
-    // Si estás en modo de agregar tarjeta, muestra el diálogo
     if (isAddingCardMode) {
       addCard(currentId);
       isAddingCardMode = false;
       serialHandler->sendToArduino("yellow p off");
     }
-  }else {
+  } else {
     ui->textBrowser->append("ID no válido: " + id);
     isAddingCardMode = false;
   }
 } 
 
-
 void MainWindow::addCard(const QString &id){
   AddCardDialog dialog(this);
-  if (dialog.exec() == QDialog::Accepted) {           // Obtener los datos ingresados desde el diálogo
+  if (dialog.exec() == QDialog::Accepted) {           
     QString name = dialog.getName();
     QString lastName = dialog.getLastName();
-    QString dni = dialog.getDNI();
+    QString dniString = dialog.getDNI();
     QString email = dialog.getEmail();
     QString phone = dialog.getPhone();
     QString address = dialog.getAddress();
@@ -97,16 +109,19 @@ void MainWindow::addCard(const QString &id){
     QString model = dialog.getModel();
 
     bool ok;
-    unsigned long long idInt = id.toULongLong(&ok, 16); // Convertir el QString 'id' desde hexadecimal a entero
+    unsigned long long idInt = id.toULongLong(&ok, 16); 
     if (!ok) {
-    // Manejar error si la conversión falla
-    qDebug() << "Error al convertir el ID de hexadecimal a entero";
+        qDebug() << "Error al convertir el ID de hexadecimal a entero";
+    }
+
+    unsigned int dni = dniString.toUInt(&ok);
+    if (!ok) {
+        qDebug() << "Error al convertir el DNI a entero";
     }
 
     QString fullName = name + " " + lastName;
 
-    // Crear el objeto Client
-    Client newClient(idInt, fullName.toStdString(), age, address.toStdString(),
+    Client newClient(idInt, fullName.toStdString(), age, dni, address.toStdString(),
                      email.toStdString(), phone.toStdString(),
                      license.toStdString(), type.toStdString(),
                      color.toStdString(), brand.toStdString(),
@@ -121,4 +136,56 @@ void MainWindow::addCard(const QString &id){
         ui->textBrowser->append("Error al agregar el cliente: " + QString::fromStdString(e.what()));
     }
   }
+}
+
+void MainWindow::addVehicleToClient(){
+    bool ok;
+    QString inputId = QInputDialog::getText(this, "Agregar Vehículo",
+                                            "Ingrese el ID del cliente (en hexadecimal):",
+                                            QLineEdit::Normal, "", &ok);
+    if (ok && !inputId.isEmpty()) {
+        // Convertir el ID hexadecimal a entero
+        bool conversionOk;
+        unsigned long long clientId = inputId.toULongLong(&conversionOk, 16); // Base 16 para hexadecimal
+
+        if (!conversionOk) {
+            QMessageBox::warning(this, "Error de conversión", "No se pudo convertir el ID de hexadecimal a entero.");
+            return;
+        }
+
+        // Recupera el cliente utilizando clientId
+        Client client;
+        try {
+            client = db->getClientById(clientId); // Usa getClientById para recuperar el cliente
+        } catch (const std::runtime_error &e) {
+            QMessageBox::warning(this, "Cliente no encontrado", "El cliente con el ID ingresado no existe en la base de datos.");
+            return;
+        }
+        std::cout << client << std::endl;
+
+    // Abrir un diálogo para ingresar los datos del vehículo
+        AddVehicleDialog vehicleDialog(this);
+        if (vehicleDialog.exec() == QDialog::Accepted) {
+            QString license = vehicleDialog.getLicense();
+            QString type = vehicleDialog.getType();
+            QString color = vehicleDialog.getColor();
+            QString brand = vehicleDialog.getBrand();
+            QString model = vehicleDialog.getModel();
+
+            // Crear el objeto Vehicle
+            Vehicle newVehicle(license.toStdString(), type.toStdString(),
+                               color.toStdString(), brand.toStdString(),
+                               model.toStdString());
+
+            // Agregar el vehículo al cliente en la base de datos
+            try {
+                db->addVehicle(clientId, newVehicle); // Usa addVehicle de DataBase
+                ui->textBrowser->append("Vehículo agregado al cliente con ID: " + inputId);
+            } catch (const std::runtime_error& e) {
+                ui->textBrowser->append("Error al agregar el vehículo: " + QString::fromStdString(e.what()));
+            }
+        } else {
+            ui->textBrowser->append("Operación de agregar vehículo cancelada.");
+        }
+  } 
 }

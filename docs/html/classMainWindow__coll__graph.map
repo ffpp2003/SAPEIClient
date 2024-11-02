@@ -1,0 +1,6 @@
+<map id="MainWindow" name="MainWindow">
+<area shape="rect" id="node1" title="Clase principal que maneja la interfaz gráfica y la lógica de la aplicación." alt="" coords="55,171,162,197"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,81,121,108"/>
+<area shape="rect" id="node3" href="$classSerialHandler.html" title="Clase que maneja la comunicación serie con un dispositivo (por ejemplo, Arduino)." alt="" coords="145,81,256,108"/>
+<area shape="rect" id="node4" title=" " alt="" coords="163,5,238,32"/>
+</map>

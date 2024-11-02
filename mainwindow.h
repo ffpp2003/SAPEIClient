@@ -13,6 +13,7 @@
 #include <QListWidget>  // Añade soporte para la lista de widgets
 #include <QListWidgetItem>  // Soporte para los elementos de la lista
 #include "serialhandler.h"
+#include "clientlistdialog.h"
 #include "lib/SAPEICore/DataBase.h"
 
 QT_BEGIN_NAMESPACE
@@ -53,6 +54,9 @@ public:
      * @param id Cadena de texto con el ID de la tarjeta.
      */
     void addCard(const QString &id);
+    
+
+    void addVehicleToClient();
 
 private slots:
     /**
@@ -60,6 +64,8 @@ private slots:
      */
     void on_addCardButton_clicked();
 
+
+    void onAddVehicleButtonClicked();  // Declara el slot para abrir el diálogo de vehículo
     /**
      * @brief Slot que maneja el evento cuando se recibe un ID desde el puerto serie.
      * @param id Cadena de texto con el ID recibido.
@@ -70,6 +76,7 @@ private slots:
      * @brief Slot que maneja la selección del puerto serie.
      */
     void onSelectSerialPortClicked();
+    void onClientListButtonClicked();  // Declara el slot
 
 private:
     SerialHandler *serialHandler; ///< Manejador de comunicación serial.

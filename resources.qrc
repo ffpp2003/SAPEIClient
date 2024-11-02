@@ -1,0 +1,6 @@
+
+<RCC>
+    <qresource prefix="/">
+        <file>utnlogo.gif</file>
+    </qresource>
+</RCC>

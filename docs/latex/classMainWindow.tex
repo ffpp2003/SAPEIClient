@@ -1,0 +1,155 @@
+\hypertarget{classMainWindow}{}\doxysection{Referencia de la Clase Main\+Window}
+\label{classMainWindow}\index{MainWindow@{MainWindow}}
+
+
+Clase principal que maneja la interfaz gráfica y la lógica de la aplicación.  
+
+
+
+
+{\ttfamily \#include $<$mainwindow.\+h$>$}
+
+
+
+Diagrama de herencias de Main\+Window
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=167pt]{classMainWindow__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Diagrama de colaboración para Main\+Window\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=268pt]{classMainWindow__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Métodos públicos}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classMainWindow_a996c5a2b6f77944776856f08ec30858d}{Main\+Window}} (QWidget $\ast$parent=nullptr)
+\begin{DoxyCompactList}\small\item\em Constructor de la clase \mbox{\hyperlink{classMainWindow}{Main\+Window}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classMainWindow_ae98d00a93bc118200eeef9f9bba1dba7}\label{classMainWindow_ae98d00a93bc118200eeef9f9bba1dba7}} 
+{\bfseries $\sim$\+Main\+Window} ()
+\begin{DoxyCompactList}\small\item\em Destructor de la clase \mbox{\hyperlink{classMainWindow}{Main\+Window}}. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classMainWindow_af64d9c9da04e19202fc3e5830cbd730c}{validate\+Id}} (const QString \&id)
+\begin{DoxyCompactList}\small\item\em Valida el ID recibido para determinar si es correcto. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classMainWindow_a3df691faf4c50f7bc13df5f196e2b47c}{add\+Card}} (const QString \&id)
+\begin{DoxyCompactList}\small\item\em Agrega una tarjeta a la base de datos utilizando el ID proporcionado. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Slots privados}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classMainWindow_a7bccfc316e359474ce1b63e7a9c7e268}\label{classMainWindow_a7bccfc316e359474ce1b63e7a9c7e268}} 
+void {\bfseries on\+\_\+add\+Card\+Button\+\_\+clicked} ()
+\begin{DoxyCompactList}\small\item\em Slot que maneja el evento cuando se presiona el botón para agregar una tarjeta. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classMainWindow_ac853e144db332a0146b4804ff74ab8e0}{on\+Id\+Received}} (const QString \&id)
+\begin{DoxyCompactList}\small\item\em Slot que maneja el evento cuando se recibe un ID desde el puerto serie. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classMainWindow_a6cba0c8383c0d180828f61bc404bd9a5}\label{classMainWindow_a6cba0c8383c0d180828f61bc404bd9a5}} 
+void {\bfseries on\+Select\+Serial\+Port\+Clicked} ()
+\begin{DoxyCompactList}\small\item\em Slot que maneja la selección del puerto serie. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Atributos privados}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classMainWindow_ab24e648bb6d56b1793892014a4a26dd8}\label{classMainWindow_ab24e648bb6d56b1793892014a4a26dd8}} 
+\mbox{\hyperlink{classSerialHandler}{Serial\+Handler}} $\ast$ {\bfseries serial\+Handler}
+\begin{DoxyCompactList}\small\item\em Manejador de comunicación serial. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classMainWindow_a31c84e1e3c6c109c0c047a1c44231c68}\label{classMainWindow_a31c84e1e3c6c109c0c047a1c44231c68}} 
+Data\+Base $\ast$ {\bfseries db}
+\begin{DoxyCompactList}\small\item\em Puntero a la base de datos utilizada para almacenar los clientes y tarjetas. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classMainWindow_a11e193bf9c2720a87d8435b9cf9bcbf2}\label{classMainWindow_a11e193bf9c2720a87d8435b9cf9bcbf2}} 
+bool {\bfseries is\+Adding\+Card\+Mode}
+\begin{DoxyCompactList}\small\item\em Indica si la aplicación está en modo de agregar tarjeta. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classMainWindow_a89fd1663dc6a44c54279a8c7f85f4600}\label{classMainWindow_a89fd1663dc6a44c54279a8c7f85f4600}} 
+bool {\bfseries is\+Charging\+Mode}
+\begin{DoxyCompactList}\small\item\em Indica si la aplicación está en modo de carga de saldo. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classMainWindow_a62af0a1fdbe5d778a925209846536006}\label{classMainWindow_a62af0a1fdbe5d778a925209846536006}} 
+QString {\bfseries current\+Id}
+\begin{DoxyCompactList}\small\item\em Almacena temporalmente el ID de la tarjeta actual. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classMainWindow_a35466a70ed47252a0191168126a352a5}\label{classMainWindow_a35466a70ed47252a0191168126a352a5}} 
+Ui\+::\+Main\+Window $\ast$ {\bfseries ui}
+\begin{DoxyCompactList}\small\item\em Puntero a la interfaz gráfica de la ventana principal. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Descripción detallada}
+Clase principal que maneja la interfaz gráfica y la lógica de la aplicación. 
+
+La clase \mbox{\hyperlink{classMainWindow}{Main\+Window}} es responsable de interactuar con el usuario, manejar la recepción de IDs a través del puerto serie, y gestionar la base de datos de tarjetas. Además, permite agregar nuevas tarjetas y seleccionar el puerto serie. 
+
+\doxysubsection{Documentación del constructor y destructor}
+\mbox{\Hypertarget{classMainWindow_a996c5a2b6f77944776856f08ec30858d}\label{classMainWindow_a996c5a2b6f77944776856f08ec30858d}} 
+\index{MainWindow@{MainWindow}!MainWindow@{MainWindow}}
+\index{MainWindow@{MainWindow}!MainWindow@{MainWindow}}
+\doxysubsubsection{\texorpdfstring{MainWindow()}{MainWindow()}}
+{\footnotesize\ttfamily Main\+Window\+::\+Main\+Window (\begin{DoxyParamCaption}\item[{QWidget $\ast$}]{parent = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+
+
+Constructor de la clase \mbox{\hyperlink{classMainWindow}{Main\+Window}}. 
+
+
+\begin{DoxyParams}{Parámetros}
+{\em parent} & Puntero al widget padre. Si no se pasa, el valor predeterminado es nullptr. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Documentación de las funciones miembro}
+\mbox{\Hypertarget{classMainWindow_a3df691faf4c50f7bc13df5f196e2b47c}\label{classMainWindow_a3df691faf4c50f7bc13df5f196e2b47c}} 
+\index{MainWindow@{MainWindow}!addCard@{addCard}}
+\index{addCard@{addCard}!MainWindow@{MainWindow}}
+\doxysubsubsection{\texorpdfstring{addCard()}{addCard()}}
+{\footnotesize\ttfamily void Main\+Window\+::add\+Card (\begin{DoxyParamCaption}\item[{const QString \&}]{id }\end{DoxyParamCaption})}
+
+
+
+Agrega una tarjeta a la base de datos utilizando el ID proporcionado. 
+
+
+\begin{DoxyParams}{Parámetros}
+{\em id} & Cadena de texto con el ID de la tarjeta. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classMainWindow_ac853e144db332a0146b4804ff74ab8e0}\label{classMainWindow_ac853e144db332a0146b4804ff74ab8e0}} 
+\index{MainWindow@{MainWindow}!onIdReceived@{onIdReceived}}
+\index{onIdReceived@{onIdReceived}!MainWindow@{MainWindow}}
+\doxysubsubsection{\texorpdfstring{onIdReceived}{onIdReceived}}
+{\footnotesize\ttfamily void Main\+Window\+::on\+Id\+Received (\begin{DoxyParamCaption}\item[{const QString \&}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [slot]}}
+
+
+
+Slot que maneja el evento cuando se recibe un ID desde el puerto serie. 
+
+
+\begin{DoxyParams}{Parámetros}
+{\em id} & Cadena de texto con el ID recibido. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classMainWindow_af64d9c9da04e19202fc3e5830cbd730c}\label{classMainWindow_af64d9c9da04e19202fc3e5830cbd730c}} 
+\index{MainWindow@{MainWindow}!validateId@{validateId}}
+\index{validateId@{validateId}!MainWindow@{MainWindow}}
+\doxysubsubsection{\texorpdfstring{validateId()}{validateId()}}
+{\footnotesize\ttfamily bool Main\+Window\+::validate\+Id (\begin{DoxyParamCaption}\item[{const QString \&}]{id }\end{DoxyParamCaption})}
+
+
+
+Valida el ID recibido para determinar si es correcto. 
+
+
+\begin{DoxyParams}{Parámetros}
+{\em id} & Cadena de texto con el ID a validar. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+true si el ID es válido, false en caso contrario. 
+\end{DoxyReturn}
+
+
+La documentación para esta clase fue generada a partir de los siguientes ficheros\+:\begin{DoxyCompactItemize}
+\item 
+/home/gaston/\+Documents/info2/\+SAPEI 1.\+0/\+SAPEIClient/\mbox{\hyperlink{mainwindow_8h}{mainwindow.\+h}}\item 
+/home/gaston/\+Documents/info2/\+SAPEI 1.\+0/\+SAPEIClient/mainwindow.\+cpp\end{DoxyCompactItemize}
