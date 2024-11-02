@@ -54,6 +54,12 @@ void SerialHandler::selectSerialPort() {
     }
 }
 void SerialHandler::connectSerialPort(const QString &portName) {
+    // Si el puerto serie ya está abierto, ciérralo antes de cambiar al nuevo puerto
+    if (serial->isOpen()) {
+        serial->close();
+        qDebug() << "Cerrando conexión en el puerto anterior.";
+    }
+
     serial->setPortName(portName);
     serial->setBaudRate(QSerialPort::Baud115200);
     serial->setDataBits(QSerialPort::Data8);
@@ -63,13 +69,12 @@ void SerialHandler::connectSerialPort(const QString &portName) {
 
     if (serial->open(QIODevice::ReadWrite)) {
         connect(serial, &QSerialPort::readyRead, this, &SerialHandler::handleReadyRead);
-        qDebug() << "Serial connection opened on" << portName;
+        qDebug() << "Conexión serial abierta en" << portName;
     } else {
-        qDebug() << "Failed to open serial connection on" << portName;
-        qDebug() << "Error:" << serial->errorString();  // Output detailed error
+        qDebug() << "No se pudo abrir la conexión serial en" << portName;
+        qDebug() << "Error:" << serial->errorString();  // Imprime el error detallado
     }
 }
-
 void SerialHandler::sendToArduino(const QString &message) {
     if (serial->isOpen()) {
         QByteArray byteArray = (message + "\r\n").toUtf8();
