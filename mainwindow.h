@@ -77,6 +77,7 @@ private slots:
      */
     void onSelectSerialPortClicked();
     void onClientListButtonClicked();  // Declara el slot
+    void updateConnectionStatus(); // Declaración de la función
 
 private:
     SerialHandler *serialHandler; ///< Manejador de comunicación serial.

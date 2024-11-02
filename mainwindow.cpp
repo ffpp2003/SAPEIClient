@@ -11,6 +11,8 @@
 #include <QLineEdit>        
 #include <cstdint>
 #include <QMovie>
+#include <QTimer>
+#include <QGraphicsTextItem>  // Asegúrate de agregar esta línea
 
 MainWindow::MainWindow(QWidget *parent)
    : QMainWindow(parent), ui(new Ui::MainWindow), serialHandler(new SerialHandler(this)), isAddingCardMode(false),isChargingMode(false) {
@@ -33,6 +35,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->addVehicleButton, &QPushButton::clicked, this, &MainWindow::onAddVehicleButtonClicked);
     connect(ui->clientListButton, &QPushButton::clicked, this, &MainWindow::onClientListButtonClicked);
     
+    QTimer *connectionStatusTimer = new QTimer(this);
+    connect(connectionStatusTimer, &QTimer::timeout, this, &MainWindow::updateConnectionStatus);
+    connectionStatusTimer->start(1000);
 }
 
 MainWindow::~MainWindow() {
@@ -41,6 +46,29 @@ MainWindow::~MainWindow() {
 
 void MainWindow::onSelectSerialPortClicked() {
     serialHandler->selectSerialPort();
+}
+
+
+void MainWindow::updateConnectionStatus() {
+    // Verifica el estado de conexión a través de SerialHandler
+    QGraphicsScene* scene = new QGraphicsScene(this);
+    QGraphicsTextItem* textItem = new QGraphicsTextItem;
+
+    if (serialHandler->isConnected()) {
+        textItem->setPlainText("Conectado");
+        textItem->setDefaultTextColor(Qt::green);
+    } else {
+        textItem->setPlainText("Desconectado");
+        textItem->setDefaultTextColor(Qt::red);
+    }
+
+    QFont font = textItem->font();
+    font.setPointSize(24);  // Tamaño de la fuente
+    font.setBold(true);     // Texto en negrita
+    textItem->setFont(font);
+
+    scene->addItem(textItem);
+    ui->connectionStatusView->setScene(scene);
 }
 
 void MainWindow::on_addCardButton_clicked() {
