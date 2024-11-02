@@ -12,7 +12,7 @@
 #include <cstdint>
 #include <QMovie>
 #include <QTimer>
-#include <QGraphicsView>
+#include <QGraphicsTextItem>  // Asegúrate de agregar esta línea
 
 MainWindow::MainWindow(QWidget *parent)
    : QMainWindow(parent), ui(new Ui::MainWindow), serialHandler(new SerialHandler(this)), isAddingCardMode(false),isChargingMode(false) {
@@ -48,13 +48,27 @@ void MainWindow::onSelectSerialPortClicked() {
     serialHandler->selectSerialPort();
 }
 
+
 void MainWindow::updateConnectionStatus() {
     // Verifica el estado de conexión a través de SerialHandler
+    QGraphicsScene* scene = new QGraphicsScene(this);
+    QGraphicsTextItem* textItem = new QGraphicsTextItem;
+
     if (serialHandler->isConnected()) {
-        ui->connectionStatusView->setStyleSheet("background-color: green;"); // Conectado: verde
+        textItem->setPlainText("Conectado");
+        textItem->setDefaultTextColor(Qt::green);
     } else {
-        ui->connectionStatusView->setStyleSheet("background-color: red;"); // Desconectado: rojo
+        textItem->setPlainText("Desconectado");
+        textItem->setDefaultTextColor(Qt::red);
     }
+
+    QFont font = textItem->font();
+    font.setPointSize(24);  // Tamaño de la fuente
+    font.setBold(true);     // Texto en negrita
+    textItem->setFont(font);
+
+    scene->addItem(textItem);
+    ui->connectionStatusView->setScene(scene);
 }
 
 void MainWindow::on_addCardButton_clicked() {
