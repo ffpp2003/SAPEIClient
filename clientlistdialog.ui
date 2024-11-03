@@ -7,11 +7,32 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLineEdit" name="searchLineEdit">
-     <property name="placeholderText">
-      <string>Buscar cliente...</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="topLayout">
+     <item>
+      <widget class="QLineEdit" name="searchLineEdit">
+       <property name="placeholderText">
+        <string>Buscar cliente...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="editClientButton">
+       <property name="text">
+        <string>Editar Cliente</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="deleteClientButton">
+       <property name="text">
+        <string>Eliminar Cliente</string>
+       </property>
+       <property name="styleSheet">
+        <string>background-color: red; color: white;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QListWidget" name="clientListWidget"/>
