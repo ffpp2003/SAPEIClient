@@ -9,12 +9,23 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "serialhandler.h"
+#include "clientlistdialog.h"
+#include "addcarddialog.h"
+#include "addvehicledialog.h"
+#include "lib/SAPEICore/DataBase.h"
+#include "lib/SAPEICore/Client.h"
 #include <QMainWindow>
 #include <QListWidget>  // Añade soporte para la lista de widgets
 #include <QListWidgetItem>  // Soporte para los elementos de la lista
-#include "serialhandler.h"
-#include "clientlistdialog.h"
-#include "lib/SAPEICore/DataBase.h"
+#include <QMessageBox>
+#include <QDebug>
+#include <QInputDialog>    
+#include <QLineEdit>        
+#include <cstdint>
+#include <QMovie>
+#include <QTimer>
+#include <QGraphicsTextItem>  // Asegúrate de agregar esta línea
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
