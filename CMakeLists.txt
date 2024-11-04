@@ -19,8 +19,10 @@ set(SOURCES
     addcarddialog.cpp
     addvehicledialog.cpp
     clientlistdialog.cpp
+    clientinfodialog.cpp
     vehiclelistdialog.cpp 
     editclientdialog.cpp
+    editvehicledialog.cpp
     lib/SAPEICore/Client.cpp
     lib/SAPEICore/Person.cpp
     lib/SAPEICore/Vehicle.cpp
@@ -33,8 +35,10 @@ set(HEADERS
     addcarddialog.h
     addvehicledialog.h
     clientlistdialog.h
+    clientinfodialog.h
     vehiclelistdialog.h 
     editclientdialog.h
+    editvehicledialog.h
     lib/SAPEICore/Client.h
     lib/SAPEICore/Person.h
     lib/SAPEICore/Vehicle.h

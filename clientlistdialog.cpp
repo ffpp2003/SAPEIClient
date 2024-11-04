@@ -49,12 +49,6 @@ void ClientListDialog::onSearchTextChanged(const QString &text){
 
 void ClientListDialog::onClientDoubleClicked(QListWidgetItem *item)
 {
-    std::string clientName = item->text().toStdString(); // Obtener el nombre del cliente seleccionado
-    std::vector<Vehicle> vehicles = database->getVehiclesByClientName(clientName);
-
-    // Crear y mostrar la ventana de lista de vehículos
-    VehicleListDialog *vehicleDialog = new VehicleListDialog(vehicles, this);
-    vehicleDialog->exec();
 }
 
 void ClientListDialog::onEditClientButtonClicked()
@@ -86,7 +80,7 @@ void ClientListDialog::onEditClientButtonClicked()
     
     if (editDialog.exec() == QDialog::Accepted) {
         // Crear un nuevo objeto Client con los datos editados
-        Client updatedClient(
+        
             clientId,
             editDialog.getName().toStdString(),
             editDialog.getAge(),
@@ -99,11 +93,8 @@ void ClientListDialog::onEditClientButtonClicked()
         // Restaurar el balance original
         updatedClient.setBalance(originalBalance);
         
-        // Restaurar todos los vehículos originales
-        for (const Vehicle& vehicle : originalVehicles) {
-            updatedClient.addVehicle(vehicle);
-        }
         
+        std::cout<< updatedClient << std::endl;
         // Guardar el cliente actualizado en la base de datos
         database->updateClient(updatedClient);
         updateClientList();  // Refrescar la lista de clientes

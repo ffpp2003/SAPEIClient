@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(serialHandler, &SerialHandler::idReceived, this, &MainWindow::onIdReceived);
     connect(ui->addVehicleButton, &QPushButton::clicked, this, &MainWindow::onAddVehicleButtonClicked);
     connect(ui->clientListButton, &QPushButton::clicked, this, &MainWindow::onClientListButtonClicked);
+    connect(ui->vehicleListButton, &QPushButton::clicked, this, &MainWindow::onVehicleListButtonClicked);
     
     QTimer *connectionStatusTimer = new QTimer(this);
     connect(connectionStatusTimer, &QTimer::timeout, this, &MainWindow::updateConnectionStatus);
@@ -80,8 +81,13 @@ void MainWindow::onAddVehicleButtonClicked()
 
 void MainWindow::onClientListButtonClicked()
 {
-    // Crear un objeto de ClientListDialog y pasarlo al database para obtener los clientes
     ClientListDialog dialog(db, this);
+    dialog.exec();
+}
+
+void MainWindow::onVehicleListButtonClicked()
+{
+    VehicleListDialog dialog(db, this);
     dialog.exec();
 }
 

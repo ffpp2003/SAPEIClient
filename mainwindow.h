@@ -11,6 +11,7 @@
 
 #include "serialhandler.h"
 #include "clientlistdialog.h"
+#include "vehiclelistdialog.h"
 #include "addcarddialog.h"
 #include "addvehicledialog.h"
 #include "lib/SAPEICore/DataBase.h"
@@ -88,6 +89,7 @@ private slots:
      */
     void onSelectSerialPortClicked();
     void onClientListButtonClicked();  // Declara el slot
+    void onVehicleListButtonClicked();  // Declara el slot
     void updateConnectionStatus(); // Declaración de la función
 
 private:
