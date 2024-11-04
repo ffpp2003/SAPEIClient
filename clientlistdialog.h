@@ -32,5 +32,7 @@ private slots:
 private:
     Ui::ClientListDialog *ui;
     DataBase *database;
+    void updateClient();
+    void deleteClient();
 };
 #endif // CLIENTLISTDIALOG_H
