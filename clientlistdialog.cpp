@@ -28,7 +28,7 @@ void ClientListDialog::updateClientList()
 {
     ui->clientListWidget->clear();  // Usa el widget desde el puntero `ui`
 
-    std::vector<Client> clients = database->getClients();
+    std::vector<Client> clients = database->getAllClients();
     for (const Client &client : clients) {
         QListWidgetItem *item = new QListWidgetItem(QString::fromStdString(client.getName()));
         ui->clientListWidget->addItem(item);  // Usa el widget desde el puntero `ui`
@@ -38,7 +38,7 @@ void ClientListDialog::updateClientList()
 void ClientListDialog::onSearchTextChanged(const QString &text){
     ui->clientListWidget->clear();  // Usa el widget desde el puntero `ui`
 
-    std::vector<Client> clients = database->getClients();
+    std::vector<Client> clients = database->getAllClients();
     for (const Client &client : clients) {
         if (QString::fromStdString(client.getName()).contains(text, Qt::CaseInsensitive)) {
             QListWidgetItem *item = new QListWidgetItem(QString::fromStdString(client.getName()));
@@ -50,7 +50,7 @@ void ClientListDialog::onSearchTextChanged(const QString &text){
 void ClientListDialog::onClientDoubleClicked(QListWidgetItem *item)
 {
     std::string clientName = item->text().toStdString(); // Obtener el nombre del cliente seleccionado
-    std::vector<Vehicle> vehicles = database->getVehicleByName(clientName);
+    std::vector<Vehicle> vehicles = database->getVehiclesByClientName(clientName);
 
     // Crear y mostrar la ventana de lista de vehículos
     VehicleListDialog *vehicleDialog = new VehicleListDialog(vehicles, this);

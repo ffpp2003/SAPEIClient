@@ -1,21 +1,13 @@
 #include "mainwindow.h"
-#include "addcarddialog.h"
-#include "addvehicledialog.h"
-#include "lib/SAPEICore/Client.h"
-#include "lib/SAPEICore/DataBase.h"
-#include "serialhandler.h"
 #include "ui_mainwindow.h"
-#include <QMessageBox>
-#include <QDebug>
-#include <QInputDialog>    
-#include <QLineEdit>        
-#include <cstdint>
-#include <QMovie>
-#include <QTimer>
-#include <QGraphicsTextItem>  // Asegúrate de agregar esta línea
 
 MainWindow::MainWindow(QWidget *parent)
-   : QMainWindow(parent), ui(new Ui::MainWindow), serialHandler(new SerialHandler(this)), isAddingCardMode(false),isChargingMode(false) {
+   : QMainWindow(parent), 
+     serialHandler(new SerialHandler(this)),  
+     db(new DataBase("database.db")), 
+     isAddingCardMode(false),
+     isChargingMode(false),
+     ui(new Ui::MainWindow) {
     ui->setupUi(this);
     
     QMovie *movie = new QMovie(":/utnlogo.gif"); // Reemplaza con la ruta de tu GIF
@@ -24,7 +16,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->utnLogo->setScaledContents(true); // Permitir que el QLabel ajuste su contenido
    
     try {
-        db = new DataBase("database.db"); // Cambia "database.db" por la ruta que desees
         ui->textBrowser->append("Base de datos inicializada correctamente.");
     } catch (const std::runtime_error& e) {
         ui->textBrowser->append("Error al inicializar la base de datos: " + QString::fromStdString(e.what()));
@@ -168,28 +159,21 @@ void MainWindow::addCard(const QString &id){
 
 void MainWindow::addVehicleToClient(){
     bool ok;
-    QString inputId = QInputDialog::getText(this, "Agregar Vehículo",
-                                            "Ingrese el ID del cliente (en hexadecimal):",
+    QString inputName = QInputDialog::getText(this, "Agregar Vehículo",
+                                            "Ingrese el nombre del cliente:",
                                             QLineEdit::Normal, "", &ok);
-    if (ok && !inputId.isEmpty()) {
-        // Convertir el ID hexadecimal a entero
-        bool conversionOk;
-        unsigned long long clientId = inputId.toULongLong(&conversionOk, 16); // Base 16 para hexadecimal
-
-        if (!conversionOk) {
-            QMessageBox::warning(this, "Error de conversión", "No se pudo convertir el ID de hexadecimal a entero.");
-            return;
-        }
 
         // Recupera el cliente utilizando clientId
         Client client;
-        try {
-            client = db->getClientById(clientId); // Usa getClientById para recuperar el cliente
-        } catch (const std::runtime_error &e) {
-            QMessageBox::warning(this, "Cliente no encontrado", "El cliente con el ID ingresado no existe en la base de datos.");
-            return;
+        
+        if((client = db->getClientByName(inputName.toStdString())).isNull()){
+          QMessageBox::warning(this, "Cliente no encontrado", "El cliente con el nombre ingresado no existe en la base de datos.");
+          return;
+        }else{
+          std::cout << client << std::endl;
         }
-        std::cout << client << std::endl;
+
+        unsigned long long clientId = client.getId();
 
     // Abrir un diálogo para ingresar los datos del vehículo
         AddVehicleDialog vehicleDialog(this);
@@ -208,12 +192,12 @@ void MainWindow::addVehicleToClient(){
             // Agregar el vehículo al cliente en la base de datos
             try {
                 db->addVehicle(clientId, newVehicle); // Usa addVehicle de DataBase
-                ui->textBrowser->append("Vehículo agregado al cliente con ID: " + inputId);
+                ui->textBrowser->append("Vehículo agregado al cliente " + inputName);
             } catch (const std::runtime_error& e) {
                 ui->textBrowser->append("Error al agregar el vehículo: " + QString::fromStdString(e.what()));
             }
         } else {
             ui->textBrowser->append("Operación de agregar vehículo cancelada.");
         }
-  } 
+   
 }
