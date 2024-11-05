@@ -49,69 +49,20 @@ void ClientListDialog::onSearchTextChanged(const QString &text){
 
 void ClientListDialog::onClientDoubleClicked(QListWidgetItem *item)
 {
-    std::string clientName = item->text().toStdString(); // Obtener el nombre del cliente seleccionado
-    std::vector<Vehicle> vehicles = database->getVehiclesByClientName(clientName);
-
-    // Crear y mostrar la ventana de lista de vehículos
-    VehicleListDialog *vehicleDialog = new VehicleListDialog(vehicles, this);
-    vehicleDialog->exec();
 }
 
-void ClientListDialog::onEditClientButtonClicked()
-{
-    // Obtener el cliente seleccionado
-    QListWidgetItem *selectedItem = ui->clientListWidget->currentItem();
-    if (!selectedItem) {
-        QMessageBox::warning(this, "Advertencia", "Por favor, selecciona un cliente para editar.");
-        return;
-    }
-    
-    // Obtener el nombre del cliente seleccionado y buscar sus datos
-    std::string clientName = selectedItem->text().toStdString();
-    Client client = database->getClientByName(clientName);
-    
-    unsigned long long clientId = client.getId();
-    // Guardar los vehículos del cliente original
-    std::vector<Vehicle> originalVehicles = client.getVehicles();
-    double originalBalance = client.getBalance();
-    
-    // Abrir EditClientDialog con los datos del cliente
-    EditClientDialog editDialog(this);
-    editDialog.setName(QString::fromStdString(client.getName()));
-    editDialog.setDNI(QString::number(client.getDni()));  
-    editDialog.setEmail(QString::fromStdString(client.getEmail()));
-    editDialog.setPhone(QString::fromStdString(client.getPhone()));
-    editDialog.setAddress(QString::fromStdString(client.getAddress()));
-    editDialog.setAge(client.getAge());
-    
-    if (editDialog.exec() == QDialog::Accepted) {
-        // Crear un nuevo objeto Client con los datos editados
-        Client updatedClient(
-            clientId,
-            editDialog.getName().toStdString(),
-            editDialog.getAge(),
-            editDialog.getDNI().toUInt(),
-            editDialog.getAddress().toStdString(),
-            editDialog.getEmail().toStdString(),
-            editDialog.getPhone().toStdString()
-        );
-        
-        // Restaurar el balance original
-        updatedClient.setBalance(originalBalance);
-        
-        // Restaurar todos los vehículos originales
-        for (const Vehicle& vehicle : originalVehicles) {
-            updatedClient.addVehicle(vehicle);
-        }
-        
-        // Guardar el cliente actualizado en la base de datos
-        database->updateClient(updatedClient);
-        updateClientList();  // Refrescar la lista de clientes
-    }
+void ClientListDialog::onEditClientButtonClicked(){
+
+  updateClient();
+
 }
+
 
 void ClientListDialog::onDeleteClientButtonClicked(){
-    // Obtener el cliente seleccionado
+  deleteClient();
+}
+
+void ClientListDialog::deleteClient(){
     QListWidgetItem *selectedItem = ui->clientListWidget->currentItem();
     if (!selectedItem) {
         QMessageBox::warning(this, "Advertencia", "Por favor, selecciona un cliente para eliminar.");
@@ -135,5 +86,46 @@ void ClientListDialog::onDeleteClientButtonClicked(){
         
         // Refrescar la lista de clientes
         updateClientList();
+    }
+}
+
+void ClientListDialog::updateClient(){
+    QListWidgetItem *selectedItem = ui->clientListWidget->currentItem();
+    if (!selectedItem) {
+        QMessageBox::warning(this, "Advertencia", "Por favor, selecciona un cliente para editar.");
+        return;
+    }
+    
+    // Obtener el nombre del cliente seleccionado y buscar sus datos
+    std::string clientName = selectedItem->text().toStdString();
+    Client client = database->getClientByName(clientName);
+    
+    
+    // Abrir EditClientDialog con los datos del cliente
+    EditClientDialog editDialog(this);
+    editDialog.setName(QString::fromStdString(client.getName()));
+    editDialog.setDNI(QString::number(client.getDni()));  
+    editDialog.setEmail(QString::fromStdString(client.getEmail()));
+    editDialog.setPhone(QString::fromStdString(client.getPhone()));
+    editDialog.setAddress(QString::fromStdString(client.getAddress()));
+    editDialog.setAge(client.getAge());
+    
+    if (editDialog.exec() == QDialog::Accepted) {
+        // Crear un nuevo objeto Client con los datos editados
+        
+            client.setName(editDialog.getName().toStdString());
+            client.setAge(editDialog.getAge());
+            client.setDni(editDialog.getDNI().toUInt());
+            client.setAddress(editDialog.getAddress().toStdString());
+            client.setEmail(editDialog.getEmail().toStdString());
+            client.setPhone(editDialog.getPhone().toStdString());
+        
+        
+        // Restaurar el balance original
+        
+        
+        // Guardar el cliente actualizado en la base de datos
+        database->updateClient(client);
+        updateClientList();  // Refrescar la lista de clientes
     }
 }

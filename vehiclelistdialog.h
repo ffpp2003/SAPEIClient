@@ -2,11 +2,16 @@
 #define VEHICLELISTDIALOG_H
 
 #include <QDialog>
-#include <QListWidget>
+#include <QMessageBox>
+#include <QString>
+#include <QListWidgetItem>
+#include "lib/SAPEICore/Client.h"
 #include "lib/SAPEICore/DataBase.h"
+#include "editvehicledialog.h"
+
 
 namespace Ui {
-class VehicleListDialog;
+    class VehicleListDialog; // Cambiar "VehicleListDialog" por "ClientListDialog"
 }
 
 class VehicleListDialog : public QDialog
@@ -14,12 +19,17 @@ class VehicleListDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit VehicleListDialog(const std::vector<Vehicle>& vehicles, QWidget* parent = nullptr);
+    explicit VehicleListDialog(DataBase* db, QWidget* parent = nullptr);
     ~VehicleListDialog();
 
+private slots:
+    void updateVehicleList();               // Muestra los nombres de los clientes en la lista
+    void onSearchTextChanged(const QString &text);  // Filtra los clientes por nombre
+    void onEditVehicleButtonClicked();
+    void onDeleteVehicleButtonClicked();
 private:
     Ui::VehicleListDialog *ui;
-    QListWidget *vehicleListWidget;  // Lista de vehículos
+    DataBase *database;
 };
+#endif // VEHICLLISTDIALOG_H
 
-#endif // VEHICLELISTDIALOG_H

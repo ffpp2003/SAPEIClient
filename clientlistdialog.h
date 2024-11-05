@@ -4,9 +4,10 @@
 #include <QDialog>
 #include <QMessageBox>
 #include <QString>
+#include <QListWidgetItem>
 #include "lib/SAPEICore/Client.h"
 #include "lib/SAPEICore/DataBase.h"
-#include "vehiclelistdialog.h"  // Incluir el nuevo diálogo de vehículos
+#include "clientinfodialog.h"  // Incluir el nuevo diálogo de vehículos
 #include "editclientdialog.h"
 
 
@@ -31,5 +32,7 @@ private slots:
 private:
     Ui::ClientListDialog *ui;
     DataBase *database;
+    void updateClient();
+    void deleteClient();
 };
 #endif // CLIENTLISTDIALOG_H
