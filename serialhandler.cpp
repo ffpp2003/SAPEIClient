@@ -15,11 +15,39 @@ void SerialHandler::selectSerialPort() {
     QDialog dialog;
     dialog.setWindowTitle("Seleccionar Puerto Serie");
 
+    // Aplicar tema oscuro
+    dialog.setStyleSheet(R"(
+        QDialog {
+            background-color: #2e2e2e;
+            color: #ffffff;
+        }
+        QLabel, QComboBox, QPushButton {
+            color: #ffffff;
+        }
+        QComboBox {
+            background-color: #3c3c3c;
+            border: 1px solid #5e5e5e;
+        }
+        QComboBox QAbstractItemView {
+            background-color: #3c3c3c;
+            selection-background-color: #5e5e5e;
+            color: #ffffff;
+        }
+        QDialogButtonBox QPushButton {
+            background-color: #5e5e5e;
+            border: 1px solid #5e5e5e;
+            color: #ffffff;
+        }
+        QDialogButtonBox QPushButton:hover {
+            background-color: #757575;
+        }
+    )");
+
     QVBoxLayout layout(&dialog);
 
     // ComboBox para listar los puertos serie disponibles
     QComboBox comboBox;
-    
+
     // Lista de puertos serie
     const auto ports = QSerialPortInfo::availablePorts();
     for (const QSerialPortInfo &port : ports) {
@@ -53,6 +81,7 @@ void SerialHandler::selectSerialPort() {
         }
     }
 }
+
 void SerialHandler::connectSerialPort(const QString &portName) {
     // Si el puerto serie ya está abierto, ciérralo antes de cambiar al nuevo puerto
     if (serial->isOpen()) {
