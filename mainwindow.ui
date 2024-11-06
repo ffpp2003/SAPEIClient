@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>772</width>
+    <width>1303</width>
     <height>506</height>
    </rect>
   </property>
@@ -124,10 +124,16 @@
         </item>
         <item>
          <widget class="QLabel" name="priceLabel">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="maximumSize">
            <size>
             <width>100</width>
-            <height>10</height>
+            <height>15</height>
            </size>
           </property>
           <property name="styleSheet">
@@ -243,7 +249,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>772</width>
+     <width>1303</width>
      <height>20</height>
     </rect>
    </property>

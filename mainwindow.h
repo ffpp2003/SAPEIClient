@@ -99,6 +99,8 @@ private slots:
     void onVehicleListButtonClicked();  // Declara el slot
     void updateConnectionStatus(); // Declaración de la función
     void onConfirmPriceChangeClicked();
+    void onBalanceUpdated(const QString &message);  // Slot para manejar la señal de actualización
+    void onBalanceUpdateFailed(const QString &message);  // Slot para manejar el error
 private:
     SerialHandler *serialHandler; ///< Manejador de comunicación serial.
     DataBase *db; ///< Puntero a la base de datos utilizada para almacenar los clientes y tarjetas.

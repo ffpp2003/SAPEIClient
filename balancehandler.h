@@ -7,10 +7,15 @@
 #include <QTextStream>
 #include <QFileInfo>
 #include <QDialog>
+#include "QString"
 #include "lib/SAPEICore/DataBase.h"
 
 class BalanceHandler : public QObject {
     Q_OBJECT
+
+signals:
+    void balanceUpdated(const QString &message);  // Señal para notificar a MainWindow
+    void balanceUpdateFailed(const QString &message);
 
 public:
     explicit BalanceHandler(DataBase *db, QObject *parent = nullptr);

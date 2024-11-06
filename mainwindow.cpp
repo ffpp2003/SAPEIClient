@@ -28,14 +28,16 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->clientListButton, &QPushButton::clicked, this, &MainWindow::onClientListButtonClicked);
     connect(ui->vehicleListButton, &QPushButton::clicked, this, &MainWindow::onVehicleListButtonClicked);
     connect(ui->confirmPriceButton, &QPushButton::clicked, this, &MainWindow::onConfirmPriceChangeClicked);
-
     connect(ui->chargeBalanceButton, &QPushButton::clicked, balanceHandler, &BalanceHandler::openDialog);
+    connect(balanceHandler, &BalanceHandler::balanceUpdated, this, &MainWindow::onBalanceUpdated);
+    connect(balanceHandler, &BalanceHandler::balanceUpdateFailed, this, &MainWindow::onBalanceUpdateFailed);
+
 
     QTimer *connectionStatusTimer = new QTimer(this);
     connect(connectionStatusTimer, &QTimer::timeout, this, &MainWindow::updateConnectionStatus);
     connectionStatusTimer->start(1000);
       
-    QString configFileName = "culocacapis.conf";
+    QString configFileName = "configfile.conf";
     QFile configFile(configFileName);
 
     if (!QFileInfo::exists(configFileName)) {
@@ -129,6 +131,14 @@ void MainWindow::onVehicleListButtonClicked()
 void MainWindow::onConfirmPriceChangeClicked() {
   changePrice();
   updatePriceDisplay();
+}
+
+void MainWindow::onBalanceUpdated(const QString &message) {
+    ui->textBrowser->append("Éxito: " + message);  // Actualizar la interfaz con el mensaje
+}
+
+void MainWindow::onBalanceUpdateFailed(const QString &message) {
+    ui->textBrowser->append("Error: " + message);  // Mostrar el error en la interfaz
 }
 
 void MainWindow::changePrice(){

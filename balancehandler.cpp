@@ -44,17 +44,17 @@ bool BalanceHandler::updateBalance(Client &client, double amount) {
     double newBalance = client.getBalance() + amount;
 
     if (newBalance < 0) {
-        qDebug() << "Fondos insuficientes para el cliente con ID:" << client.getId();
+        emit balanceUpdateFailed("Fondos insuficientes para el cliente: " + QString::fromStdString(client.getName()));
         return false;
     }
 
     client.setBalance(newBalance);
     try {
         db->updateClient(client);
-        qDebug() << "Balance actualizado para el cliente con ID:" << client.getId() << "Nuevo balance:" << newBalance;
+        emit balanceUpdated("Balance actualizado para el cliente: " + QString::fromStdString(client.getName()) + " Nuevo balance: " + QString::number(newBalance));
         return true;
     } catch (const std::runtime_error &e) {
-        qDebug() << "Error al actualizar el balance:" << e.what();
+        emit balanceUpdateFailed("Error al actualizar el balance: " + QString::fromStdString(e.what()));
         return false;
     }
 }
