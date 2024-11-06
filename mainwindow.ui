@@ -39,6 +39,13 @@
         background-color: #1e1e1e;
         border: 1px solid #3c3c3c;
     }
+    QLineEdit {
+        background-color: #2d2d2d;
+        color: #ffffff;
+        border: 1px solid #3c3c3c;
+        padding: 5px;
+        border-radius: 4px;
+    }
    </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -78,7 +85,76 @@
         <item>
          <widget class="QPushButton" name="vehicleListButton">
           <property name="text">
-           <string>Mostrar Vehiculos</string>
+           <string>Mostrar Vehículos</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="priceLabel">
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>10</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string>color: #ffffff;</string>
+          </property>
+          <property name="text">
+           <string>Precio Actual:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="priceLayout">
+          <item>
+           <widget class="QLCDNumber" name="priceDisplay">
+            <property name="maximumSize">
+             <size>
+              <width>60</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string>color: #00ff00; background-color: #2d2d2d;</string>
+            </property>
+            <property name="digitCount">
+             <number>5</number>
+            </property>
+            <property name="segmentStyle">
+             <enum>QLCDNumber::Flat</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="priceInput">
+            <property name="placeholderText">
+             <string>Ingrese el nuevo precio...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="confirmPriceButton">
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(87, 227, 137);</string>
+            </property>
+            <property name="text">
+             <string>Confirmar </string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="chargeBalanceButton">
+          <property name="text">
+           <string>Cargar Saldo</string>
           </property>
          </widget>
         </item>
