@@ -193,8 +193,11 @@ void MainWindow::onIdReceived(const QString &id) {
         // Modo de agregar tarjeta con verificación
         if (isAddingCardMode) {
             if (client.isNull()) {  // Verifica si el cliente no existe
-                addCard(currentId);
+                if(addCard(currentId)){
                 ui->textBrowser->append("Tarjeta añadida con éxito.");
+                }else{
+                ui->textBrowser->append("No se pudo agregar la tarjeta.");
+                }
             } else {
                 ui->textBrowser->append("ID ya existe en la base de datos. No se añade la tarjeta. El cliente es " + QString::fromStdString(client.getName()));
             }
@@ -206,7 +209,7 @@ void MainWindow::onIdReceived(const QString &id) {
     }
 }
 
-void MainWindow::addCard(const QString &id){
+bool MainWindow::addCard(const QString &id){
   AddCardDialog dialog(this);
   if (dialog.exec() == QDialog::Accepted) {           
     QString name = dialog.getName();
@@ -246,8 +249,10 @@ void MainWindow::addCard(const QString &id){
     try {
         db->addClient(newClient);
         ui->textBrowser->append("Cliente agregado: " + name + " " + lastName + " con ID: " + id);
+        return 1;
     } catch (const std::runtime_error& e) {
         ui->textBrowser->append("Error al agregar el cliente: " + QString::fromStdString(e.what()));
+        return 0;
     }
   }
 }

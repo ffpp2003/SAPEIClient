@@ -102,7 +102,9 @@ void ClientListDialog::deleteClient(){
         return;
     }
     
-    std::string clientName = selectedItem->text().toStdString();
+    QString clientText = selectedItem->text();
+    QStringList parts = clientText.split(" - DNI: "); 
+    std::string clientName = parts[0].toStdString();
     Client client = database->getClientByName(clientName);
     unsigned long long clientId = client.getId();
 
@@ -125,7 +127,9 @@ void ClientListDialog::updateClient(){
         return;
     }
     
-    std::string clientName = selectedItem->text().toStdString();
+    QString clientText = selectedItem->text();
+    QStringList parts = clientText.split(" - DNI: "); 
+    std::string clientName = parts[0].toStdString();
     Client client = database->getClientByName(clientName);
     
     EditClientDialog editDialog(this);
