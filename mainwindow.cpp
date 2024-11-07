@@ -176,7 +176,7 @@ void MainWindow::onIdReceived(const QString &id) {
       if(!isAddingCardMode){
 
         // Verificación de saldo
-        if (currentBalance >= chargeAmount || currentBalance - chargeAmount >= -chargeAmount) { 
+        if (currentBalance >= chargeAmount) { 
             balanceHandler->debit(idInt, chargeAmount);
 
             // Mensaje de confirmación de cobro
@@ -184,9 +184,6 @@ void MainWindow::onIdReceived(const QString &id) {
                                     ". Saldo restante = $" + QString::number(currentBalance - chargeAmount));
 
             // Aviso si el saldo es negativo
-            if (currentBalance - chargeAmount < 0) {
-                ui->textBrowser->append("Aviso: el saldo del cliente es negativo.");
-            }
         } else {
             // Mensaje de saldo insuficiente
             ui->textBrowser->append("Saldo insuficiente para realizar el cobro.");
