@@ -173,18 +173,34 @@ void MainWindow::onIdReceived(const QString &id) {
         double currentBalance = db->getBalance(idInt);
         double chargeAmount = balanceHandler->loadPrice();
 
-        if (currentBalance >= chargeAmount) { 
+      if(!isAddingCardMode){
+
+        // Verificación de saldo
+        if (currentBalance >= chargeAmount || currentBalance - chargeAmount >= -chargeAmount) { 
             balanceHandler->debit(idInt, chargeAmount);
 
+            // Mensaje de confirmación de cobro
             ui->textBrowser->append("Cobro realizado a " + QString::fromStdString(client.getName()) + " por un monto de $" + QString::number(chargeAmount) +
                                     ". Saldo restante = $" + QString::number(currentBalance - chargeAmount));
 
+            // Aviso si el saldo es negativo
+            if (currentBalance - chargeAmount < 0) {
+                ui->textBrowser->append("Aviso: el saldo del cliente es negativo.");
+            }
         } else {
+            // Mensaje de saldo insuficiente
             ui->textBrowser->append("Saldo insuficiente para realizar el cobro.");
         }
+      }
 
+        // Modo de agregar tarjeta con verificación
         if (isAddingCardMode) {
-            addCard(currentId);
+            if (client.isNull()) {  // Verifica si el cliente no existe
+                addCard(currentId);
+                ui->textBrowser->append("Tarjeta añadida con éxito.");
+            } else {
+                ui->textBrowser->append("ID ya existe en la base de datos. No se añade la tarjeta. El cliente es " + QString::fromStdString(client.getName()));
+            }
             isAddingCardMode = false;
         }
     } else {
