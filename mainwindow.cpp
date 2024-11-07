@@ -173,15 +173,12 @@ void MainWindow::onIdReceived(const QString &id) {
         double currentBalance = db->getBalance(idInt);
         double chargeAmount = balanceHandler->loadPrice();
 
-        if (currentBalance >= chargeAmount || currentBalance - chargeAmount >= -chargeAmount) { 
+        if (currentBalance >= chargeAmount) { 
             balanceHandler->debit(idInt, chargeAmount);
 
             ui->textBrowser->append("Cobro realizado a " + QString::fromStdString(client.getName()) + " por un monto de $" + QString::number(chargeAmount) +
                                     ". Saldo restante = $" + QString::number(currentBalance - chargeAmount));
 
-            if (currentBalance - chargeAmount < 0) {
-                ui->textBrowser->append("Aviso: el saldo del cliente es negativo.");
-            }
         } else {
             ui->textBrowser->append("Saldo insuficiente para realizar el cobro.");
         }

@@ -66,6 +66,7 @@ void ClientListDialog::onClientDoubleClicked(QListWidgetItem *item) {
     ui->ageLabel->setText("Edad: " + QString::number(client.getAge()));
     ui->idLabel->setText("ID: " + QString::number(client.getId()));
     ui->hexIdLabel->setText("ID Hexadecimal: " + QString::number(client.getId(), 16).toUpper());
+    ui->balanceLabel->setText("Saldo: " + QString::number(client.getBalance()));
 
     std::vector<Vehicle> vehicles = database->getVehiclesByClientId(client.getId());
 
