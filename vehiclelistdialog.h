@@ -27,6 +27,7 @@ private slots:
     void onSearchTextChanged(const QString &text);  // Filtra los clientes por nombre
     void onEditVehicleButtonClicked();
     void onDeleteVehicleButtonClicked();
+    void onVehicleDoubleClicked(QListWidgetItem *item);
 private:
     Ui::VehicleListDialog *ui;
     DataBase *database;

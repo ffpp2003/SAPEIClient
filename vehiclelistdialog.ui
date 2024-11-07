@@ -5,38 +5,112 @@
   <property name="windowTitle">
    <string>Lista de Vehículos</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QHBoxLayout" name="mainLayout">
+   
+   <!-- Sección izquierda con la lista de vehículos -->
    <item>
-    <layout class="QHBoxLayout" name="topLayout">
+    <layout class="QVBoxLayout" name="leftLayout">
      <item>
-      <widget class="QLineEdit" name="searchLineEdit">
-       <property name="placeholderText">
-        <string>Buscar vehículo...</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="topLayout">
+       <item>
+        <widget class="QLineEdit" name="searchLineEdit">
+         <property name="placeholderText">
+          <string>Buscar vehículo...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="editVehicleButton">
+         <property name="text">
+          <string>Editar Vehículo</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="deleteVehicleButton">
+         <property name="text">
+          <string>Eliminar Vehículo</string>
+         </property>
+         <property name="styleSheet">
+          <string>background-color: red; color: white;</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="editVehicleButton">
-       <property name="text">
-        <string>Editar Vehículo</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="deleteVehicleButton">
-       <property name="text">
-        <string>Eliminar Vehículo</string>
-       </property>
-       <property name="styleSheet">
-        <string>background-color: red; color: white;</string>
-       </property>
-      </widget>
+      <widget class="QListWidget" name="VehicleListWidget"/>
      </item>
     </layout>
    </item>
+   
+   <!-- Sección derecha con la información del vehículo -->
    <item>
-    <widget class="QListWidget" name="VehicleListWidget"/>
+    <widget class="QGroupBox" name="vehicleInfoGroupBox">
+     <property name="title">
+      <string>Información del Vehículo</string>
+     </property>
+     <layout class="QVBoxLayout" name="vehicleInfoLayout">
+      <item>
+       <widget class="QLabel" name="licensePlateLabel">
+        <property name="text">
+         <string>Placa: </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="typeLabel">
+        <property name="text">
+         <string>Tipo: </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="colorLabel">
+        <property name="text">
+         <string>Color: </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="brandLabel">
+        <property name="text">
+         <string>Marca: </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="modelLabel">
+        <property name="text">
+         <string>Modelo: </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="clientInfoLabel">
+        <property name="text">
+         <string>Cliente: </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="idLabel">
+        <property name="text">
+         <string>ID: </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="hexIdLabel">
+        <property name="text">
+         <string>HEX ID: </string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
+   
   </layout>
  </widget>
  <resources/>

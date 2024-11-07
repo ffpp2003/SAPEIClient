@@ -12,10 +12,11 @@ VehicleListDialog::VehicleListDialog(DataBase* db, QWidget *parent) :
     updateVehicleList();
 
     // Conectar el cambio de texto del campo de búsqueda al slot de actualización de la lista
+    
     connect(ui->searchLineEdit, &QLineEdit::textChanged, this, &VehicleListDialog::onSearchTextChanged);
-
     connect(ui->editVehicleButton, &QPushButton::clicked, this, &VehicleListDialog::onEditVehicleButtonClicked);
     connect(ui->deleteVehicleButton, &QPushButton::clicked, this, &VehicleListDialog::onDeleteVehicleButtonClicked);
+    connect(ui->VehicleListWidget, &QListWidget::itemDoubleClicked, this, &VehicleListDialog::onVehicleDoubleClicked);
 }
 
 VehicleListDialog::~VehicleListDialog()
@@ -142,4 +143,29 @@ void VehicleListDialog::onDeleteVehicleButtonClicked(){
         // Refrescar la lista de vehículos
         updateVehicleList();  // Si estás usando una lista de clientes, renombra a `updateVehicleList()`
     }
+}
+
+void VehicleListDialog::onVehicleDoubleClicked(QListWidgetItem *item)
+{
+    if (!item) return;
+
+    QString itemText = item->text();
+    QStringList parts = itemText.split(" - ");
+    if (parts.isEmpty()) return;
+
+    std::string licensePlate = parts[0].toStdString();
+    Vehicle vehicle = database->getVehicleByPlate(licensePlate);
+    if (vehicle.isNull()) return;
+
+    Client client = database->getClientById(vehicle.getClientId());
+
+    // Actualizar los labels en el grupo de información del vehículo
+    ui->typeLabel->setText("Tipo: " + QString::fromStdString(vehicle.getType()));
+    ui->colorLabel->setText("Color: " + QString::fromStdString(vehicle.getColor()));
+    ui->brandLabel->setText("Marca: " + QString::fromStdString(vehicle.getBrand()));
+    ui->modelLabel->setText("Modelo: " + QString::fromStdString(vehicle.getModel()));
+    ui->clientInfoLabel->setText("Cliente: " + QString::fromStdString(client.getName()));
+    ui->licensePlateLabel->setText("Placa: " + QString::fromStdString(vehicle.getLicensePlate()));
+    ui->idLabel->setText("ID: " + QString::number(client.getId()));  
+    ui->hexIdLabel->setText("ID: " + QString::number(client.getId(), 16).toUpper());
 }

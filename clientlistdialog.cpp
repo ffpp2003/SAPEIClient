@@ -8,10 +8,8 @@ ClientListDialog::ClientListDialog(DataBase* db, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Cargar lista inicial
     updateClientList();
 
-    // Conectar el cambio de texto del campo de búsqueda al slot de actualización de la lista
     connect(ui->searchLineEdit, &QLineEdit::textChanged, this, &ClientListDialog::onSearchTextChanged);
     connect(ui->clientListWidget, &QListWidget::itemDoubleClicked, this, &ClientListDialog::onClientDoubleClicked);
 
@@ -26,29 +24,63 @@ ClientListDialog::~ClientListDialog()
 
 void ClientListDialog::updateClientList()
 {
-    ui->clientListWidget->clear();  // Usa el widget desde el puntero `ui`
+    ui->clientListWidget->clear(); 
 
     std::vector<Client> clients = database->getAllClients();
     for (const Client &client : clients) {
-        QListWidgetItem *item = new QListWidgetItem(QString::fromStdString(client.getName()));
-        ui->clientListWidget->addItem(item);  // Usa el widget desde el puntero `ui`
+    QListWidgetItem *item = new QListWidgetItem(QString::fromStdString(client.getName()) + " - DNI: " + QString::number(client.getDni()));
+        ui->clientListWidget->addItem(item);  
     }
 }
 
-void ClientListDialog::onSearchTextChanged(const QString &text){
-    ui->clientListWidget->clear();  // Usa el widget desde el puntero `ui`
+void ClientListDialog::onSearchTextChanged(const QString &text)
+{
+    ui->clientListWidget->clear();
 
     std::vector<Client> clients = database->getAllClients();
     for (const Client &client : clients) {
-        if (QString::fromStdString(client.getName()).contains(text, Qt::CaseInsensitive)) {
-            QListWidgetItem *item = new QListWidgetItem(QString::fromStdString(client.getName()));
-            ui->clientListWidget->addItem(item);  // Usa el widget desde el puntero `ui`
+        QString name = QString::fromStdString(client.getName());
+        QString dni = QString::number(client.getDni());
+        
+        if (name.contains(text, Qt::CaseInsensitive) || dni.contains(text, Qt::CaseInsensitive)) {
+            QString displayText = name + " - DNI: " + dni;
+            QListWidgetItem *item = new QListWidgetItem(displayText);
+            ui->clientListWidget->addItem(item);
         }
     }
 }
 
-void ClientListDialog::onClientDoubleClicked(QListWidgetItem *item)
-{
+void ClientListDialog::onClientDoubleClicked(QListWidgetItem *item) {
+    QString clientText = item->text();
+    QStringList parts = clientText.split(" - DNI: "); 
+
+    std::string clientName = parts[0].toStdString();
+
+    Client client = database->getClientByName(clientName);
+
+    ui->nameLabel->setText("Nombre: " + QString::fromStdString(client.getName()));
+    ui->dniLabel->setText("DNI: " + QString::number(client.getDni()));
+    ui->emailLabel->setText("Email: " + QString::fromStdString(client.getEmail()));
+    ui->phoneLabel->setText("Teléfono: " + QString::fromStdString(client.getPhone()));
+    ui->addressLabel->setText("Dirección: " + QString::fromStdString(client.getAddress()));
+    ui->ageLabel->setText("Edad: " + QString::number(client.getAge()));
+    ui->idLabel->setText("ID: " + QString::number(client.getId()));
+    ui->hexIdLabel->setText("ID Hexadecimal: " + QString::number(client.getId(), 16).toUpper());
+
+    std::vector<Vehicle> vehicles = database->getVehiclesByClientId(client.getId());
+
+    ui->vehicleTableWidget->setRowCount(0);  
+    int rowCount = static_cast<int>(vehicles.size());
+    ui->vehicleTableWidget->setRowCount(rowCount);  
+    for (size_t row = 0; row < vehicles.size(); ++row) {
+        const Vehicle &vehicle = vehicles[row];
+
+ ui->vehicleTableWidget->setItem(static_cast<int>(row), 0, new QTableWidgetItem(QString::fromStdString(vehicle.getLicensePlate())));
+        ui->vehicleTableWidget->setItem(static_cast<int>(row), 1, new QTableWidgetItem(QString::fromStdString(vehicle.getBrand())));
+        ui->vehicleTableWidget->setItem(static_cast<int>(row), 2, new QTableWidgetItem(QString::fromStdString(vehicle.getModel())));
+        ui->vehicleTableWidget->setItem(static_cast<int>(row), 3, new QTableWidgetItem(QString::fromStdString(vehicle.getColor())));
+        ui->vehicleTableWidget->setItem(static_cast<int>(row), 4, new QTableWidgetItem(QString::fromStdString(vehicle.getType())));
+    }
 }
 
 void ClientListDialog::onEditClientButtonClicked(){
@@ -69,7 +101,6 @@ void ClientListDialog::deleteClient(){
         return;
     }
     
-    // Obtener el nombre del cliente seleccionado y buscar su ID
     std::string clientName = selectedItem->text().toStdString();
     Client client = database->getClientByName(clientName);
     unsigned long long clientId = client.getId();
@@ -81,10 +112,7 @@ void ClientListDialog::deleteClient(){
                                   QString("¿Estás seguro de que deseas eliminar al cliente '%1'?").arg(clientNameQString),
                                   QMessageBox::Yes | QMessageBox::No);
     if (reply == QMessageBox::Yes) {
-        // Eliminar el cliente de la base de datos
         database->rmClient(clientId);
-        
-        // Refrescar la lista de clientes
         updateClientList();
     }
 }
@@ -96,12 +124,9 @@ void ClientListDialog::updateClient(){
         return;
     }
     
-    // Obtener el nombre del cliente seleccionado y buscar sus datos
     std::string clientName = selectedItem->text().toStdString();
     Client client = database->getClientByName(clientName);
     
-    
-    // Abrir EditClientDialog con los datos del cliente
     EditClientDialog editDialog(this);
     editDialog.setName(QString::fromStdString(client.getName()));
     editDialog.setDNI(QString::number(client.getDni()));  
@@ -111,7 +136,6 @@ void ClientListDialog::updateClient(){
     editDialog.setAge(client.getAge());
     
     if (editDialog.exec() == QDialog::Accepted) {
-        // Crear un nuevo objeto Client con los datos editados
         
             client.setName(editDialog.getName().toStdString());
             client.setAge(editDialog.getAge());
@@ -120,12 +144,7 @@ void ClientListDialog::updateClient(){
             client.setEmail(editDialog.getEmail().toStdString());
             client.setPhone(editDialog.getPhone().toStdString());
         
-        
-        // Restaurar el balance original
-        
-        
-        // Guardar el cliente actualizado en la base de datos
         database->updateClient(client);
-        updateClientList();  // Refrescar la lista de clientes
+        updateClientList();  
     }
 }
