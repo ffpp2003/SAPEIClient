@@ -16,6 +16,7 @@ set(SOURCES
     main.cpp
     mainwindow.cpp
     serialhandler.cpp
+    balancehandler.cpp
     addcarddialog.cpp
     addvehicledialog.cpp
     clientlistdialog.cpp
@@ -32,6 +33,7 @@ set(SOURCES
 set(HEADERS
     mainwindow.h
     serialhandler.h
+    balancehandler.h
     addcarddialog.h
     addvehicledialog.h
     clientlistdialog.h

@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
    : QMainWindow(parent), 
      serialHandler(new SerialHandler(this)),  
      db(new DataBase("database.db")), 
+     balanceHandler(new BalanceHandler(db, this)), 
      isAddingCardMode(false),
      isChargingMode(false),
      ui(new Ui::MainWindow) {
@@ -26,10 +27,39 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->addVehicleButton, &QPushButton::clicked, this, &MainWindow::onAddVehicleButtonClicked);
     connect(ui->clientListButton, &QPushButton::clicked, this, &MainWindow::onClientListButtonClicked);
     connect(ui->vehicleListButton, &QPushButton::clicked, this, &MainWindow::onVehicleListButtonClicked);
-    
+    connect(ui->confirmPriceButton, &QPushButton::clicked, this, &MainWindow::onConfirmPriceChangeClicked);
+    connect(ui->chargeBalanceButton, &QPushButton::clicked, balanceHandler, &BalanceHandler::openDialog);
+    connect(balanceHandler, &BalanceHandler::balanceUpdated, this, &MainWindow::onBalanceUpdated);
+    connect(balanceHandler, &BalanceHandler::balanceUpdateFailed, this, &MainWindow::onBalanceUpdateFailed);
+
+
     QTimer *connectionStatusTimer = new QTimer(this);
     connect(connectionStatusTimer, &QTimer::timeout, this, &MainWindow::updateConnectionStatus);
     connectionStatusTimer->start(1000);
+      
+    QString configFileName = "configfile.conf";
+    QFile configFile(configFileName);
+
+    if (!QFileInfo::exists(configFileName)) {
+        if (configFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            QTextStream out(&configFile);
+            out << 600; // Precio por defecto
+            configFile.close();
+        }
+    }
+
+    // Leer el precio desde el archivo y establecerlo
+    if (configFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&configFile);
+        double fileprice;
+        in >> fileprice; // Leer el precio del archivo
+        configFile.close();
+
+        // Establecer el precio en la variable price y en el display
+        updatePriceDisplay(); // Llamar a tu función de actu                     //
+                                   
+    }
+
 }
 
 MainWindow::~MainWindow() {
@@ -63,6 +93,13 @@ void MainWindow::updateConnectionStatus() {
     ui->connectionStatusView->setScene(scene);
 }
 
+void MainWindow::updatePriceDisplay()
+{
+    double price = 0;
+    price = balanceHandler->loadPrice();
+    ui->priceDisplay->display(price);
+}
+
 void MainWindow::on_addCardButton_clicked() {
     isAddingCardMode = true;
     ui->textBrowser->append("Modo de agregar tarjeta activado. Escanee una tarjeta...");
@@ -91,6 +128,31 @@ void MainWindow::onVehicleListButtonClicked()
     dialog.exec();
 }
 
+void MainWindow::onConfirmPriceChangeClicked() {
+  changePrice();
+  updatePriceDisplay();
+}
+
+void MainWindow::onBalanceUpdated(const QString &message) {
+    ui->textBrowser->append("Éxito: " + message);  // Actualizar la interfaz con el mensaje
+}
+
+void MainWindow::onBalanceUpdateFailed(const QString &message) {
+    ui->textBrowser->append("Error: " + message);  // Mostrar el error en la interfaz
+}
+
+void MainWindow::changePrice(){
+
+    bool ok;
+    double newPrice = ui->priceInput->text().toDouble(&ok);  
+    if (newPrice >= 0) {
+        ui->textBrowser->append("Precio de estacionamiento actualizado a: $" + QString::number(newPrice, 'f', 2));
+        balanceHandler->savePrice(newPrice);
+    } else {
+        QMessageBox::warning(this, "Error de entrada", "El precio debe ser un valor positivo.");
+    }
+}
+
 bool MainWindow::validateId(const QString &id) {
     if (id.length() != 8) {
         qDebug() << "ID no válido";  
@@ -102,9 +164,16 @@ bool MainWindow::validateId(const QString &id) {
 void MainWindow::onIdReceived(const QString &id) {
   qDebug() << "ID recibido";  
   currentId = id;  
+  bool ok;
 
   if (validateId(currentId)) {
-    ui->textBrowser->append("ID recibido: " + currentId);
+    unsigned long long idInt = id.toULongLong(&ok, 16); 
+    qDebug() << "ID recibido: " << currentId;
+    Client client = db->getClientById(idInt);
+    ui->textBrowser->append("Cobro realizado a " + QString::fromStdString(client.getName()) + " por un monto de $" + QString::number(balanceHandler->loadPrice()) +". Saldo restante = $" + QString::number(db->getBalance(idInt)));
+
+    balanceHandler->debit(idInt, balanceHandler->loadPrice() );
+
 
     if (isAddingCardMode) {
       addCard(currentId);

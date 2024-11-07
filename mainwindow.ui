@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>772</width>
+    <width>1303</width>
     <height>506</height>
    </rect>
   </property>
@@ -39,6 +39,13 @@
         background-color: #1e1e1e;
         border: 1px solid #3c3c3c;
     }
+    QLineEdit {
+        background-color: #2d2d2d;
+        color: #ffffff;
+        border: 1px solid #3c3c3c;
+        padding: 5px;
+        border-radius: 4px;
+    }
    </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -47,8 +54,17 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <layout class="QVBoxLayout" name="buttonLayout">
+        <property name="spacing">
+         <number>4</number>
+        </property>
         <item>
          <widget class="QPushButton" name="addCardButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Agregar Tarjeta</string>
           </property>
@@ -56,6 +72,12 @@
         </item>
         <item>
          <widget class="QPushButton" name="addVehicleButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Agregar Vehículo</string>
           </property>
@@ -63,6 +85,12 @@
         </item>
         <item>
          <widget class="QPushButton" name="selectSerialPortButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Seleccionar Puerto Serie</string>
           </property>
@@ -70,6 +98,12 @@
         </item>
         <item>
          <widget class="QPushButton" name="clientListButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Mostrar Clientes</string>
           </property>
@@ -77,8 +111,101 @@
         </item>
         <item>
          <widget class="QPushButton" name="vehicleListButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
-           <string>Mostrar Vehiculos</string>
+           <string>Mostrar Vehículos</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="priceLabel">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>15</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string>color: #ffffff;</string>
+          </property>
+          <property name="text">
+           <string>Precio Actual:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="priceLayout">
+          <item>
+           <widget class="QLCDNumber" name="priceDisplay">
+            <property name="maximumSize">
+             <size>
+              <width>60</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string>color: #00ff00; background-color: #2d2d2d;</string>
+            </property>
+            <property name="digitCount">
+             <number>5</number>
+            </property>
+            <property name="segmentStyle">
+             <enum>QLCDNumber::Flat</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="priceInput">
+            <property name="minimumSize">
+             <size>
+              <width>180</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="placeholderText">
+             <string>Ingrese el nuevo precio...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="confirmPriceButton">
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(87, 227, 137);</string>
+            </property>
+            <property name="text">
+             <string>Confirmar </string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="chargeBalanceButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Cargar Saldo</string>
           </property>
          </widget>
         </item>
@@ -88,7 +215,7 @@
        <widget class="QGraphicsView" name="connectionStatusView">
         <property name="minimumSize">
          <size>
-          <width>200</width>
+          <width>300</width>
           <height>150</height>
          </size>
         </property>
@@ -99,6 +226,12 @@
       </item>
       <item>
        <widget class="QLabel" name="utnLogo">
+        <property name="minimumSize">
+         <size>
+          <width>640</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="toolTip">
          <string>Logo Animado</string>
         </property>
@@ -116,7 +249,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>772</width>
+     <width>1303</width>
      <height>20</height>
     </rect>
    </property>

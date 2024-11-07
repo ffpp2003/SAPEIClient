@@ -14,6 +14,7 @@
 #include "vehiclelistdialog.h"
 #include "addcarddialog.h"
 #include "addvehicledialog.h"
+#include "balancehandler.h"
 #include "lib/SAPEICore/DataBase.h"
 #include "lib/SAPEICore/Client.h"
 #include <QMainWindow>
@@ -27,6 +28,9 @@
 #include <QMovie>
 #include <QTimer>
 #include <QGraphicsTextItem>  // Asegúrate de agregar esta línea
+#include <QFile>
+#include <QTextStream>
+#include <QFileInfo>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -69,6 +73,9 @@ public:
     
 
     void addVehicleToClient();
+    void changePrice();
+    void updatePriceDisplay();
+
 
 private slots:
     /**
@@ -91,14 +98,17 @@ private slots:
     void onClientListButtonClicked();  // Declara el slot
     void onVehicleListButtonClicked();  // Declara el slot
     void updateConnectionStatus(); // Declaración de la función
-
+    void onConfirmPriceChangeClicked();
+    void onBalanceUpdated(const QString &message);  // Slot para manejar la señal de actualización
+    void onBalanceUpdateFailed(const QString &message);  // Slot para manejar el error
 private:
     SerialHandler *serialHandler; ///< Manejador de comunicación serial.
     DataBase *db; ///< Puntero a la base de datos utilizada para almacenar los clientes y tarjetas.
+    BalanceHandler *balanceHandler;  // BalanceHandler como atributo
+    Ui::MainWindow *ui; ///< Puntero a la interfaz gráfica de la ventana principal.
+    QString currentId; ///< Almacena temporalmente el ID de la tarjeta actual.
     bool isAddingCardMode; ///< Indica si la aplicación está en modo de agregar tarjeta.
     bool isChargingMode; ///< Indica si la aplicación está en modo de carga de saldo.
-    QString currentId; ///< Almacena temporalmente el ID de la tarjeta actual.
-    Ui::MainWindow *ui; ///< Puntero a la interfaz gráfica de la ventana principal.
 };
 
 #endif // MAINWINDOW_H
