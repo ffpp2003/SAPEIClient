@@ -109,7 +109,7 @@ void BalanceHandler::openDialog() {
     // Configurar conexiones, por ejemplo, conectar el botón de aceptar o rechazar
     if (dialog.exec() == QDialog::Accepted) {
         QString clientName = ui.clientNameLineEdit->text();
-        double amount = ui.amountSpinBox->text().toDouble();
+        double amount = QLocale::system().toDouble(ui.amountSpinBox->text());
 
         if (!clientName.isEmpty() && amount != 0) {
             credit(clientName, amount);

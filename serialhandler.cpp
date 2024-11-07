@@ -82,6 +82,9 @@ void SerialHandler::selectSerialPort() {
     }
 }
 
+#include <QElapsedTimer>
+#include <QThread>
+
 void SerialHandler::connectSerialPort(const QString &portName) {
     // Si el puerto serie ya está abierto, ciérralo antes de cambiar al nuevo puerto
     if (serial->isOpen()) {
@@ -96,14 +99,29 @@ void SerialHandler::connectSerialPort(const QString &portName) {
     serial->setStopBits(QSerialPort::OneStop);
     serial->setFlowControl(QSerialPort::NoFlowControl);
 
-    if (serial->open(QIODevice::ReadWrite)) {
+                // Enviar "SAPEI_INIT" al puerto serie
+    sendToArduino("SAPEI_INIT");
+
+    // Esperar "CONNECTED" en la respuesta
+    if (serial->waitForReadyRead(3000)) {  // Espera hasta 3 segundos
+    QByteArray connectedResponse = serial->readAll();
+      if (connectedResponse.contains("CONNECTED")) {
+        qDebug() << "Conexión verificada: 'CONNECTED' recibido.";
         connect(serial, &QSerialPort::readyRead, this, &SerialHandler::handleReadyRead);
-        qDebug() << "Conexión serial abierta en" << portName;
+      } else {
+         qDebug() << "No se recibió 'CONNECTED' del dispositivo.";
+         serial->close();
+       }
+      } else {
+         qDebug() << "Timeout: No se recibió 'CONNECTED' después de enviar 'SAPEI_INIT'.";
+         serial->close();
+      }
     } else {
         qDebug() << "No se pudo abrir la conexión serial en" << portName;
-        qDebug() << "Error:" << serial->errorString();  // Imprime el error detallado
+        qDebug() << "Error:" << serial->errorString();
     }
 }
+
 void SerialHandler::sendToArduino(const QString &message) {
     if (serial->isOpen()) {
         QByteArray byteArray = (message + "\r\n").toUtf8();
