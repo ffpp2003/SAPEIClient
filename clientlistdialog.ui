@@ -2,40 +2,174 @@
 <ui version="4.0">
  <class>ClientListDialog</class>
  <widget class="QDialog" name="ClientListDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>706</width>
+    <height>440</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Lista de Clientes</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QHBoxLayout" name="mainLayout">
    <item>
-    <layout class="QHBoxLayout" name="topLayout">
+    <layout class="QVBoxLayout" name="leftLayout">
      <item>
-      <widget class="QLineEdit" name="searchLineEdit">
-       <property name="placeholderText">
-        <string>Buscar cliente...</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="topLayout">
+       <item>
+        <widget class="QLineEdit" name="searchLineEdit">
+         <property name="placeholderText">
+          <string>Buscar cliente...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="editClientButton">
+         <property name="text">
+          <string>Editar Cliente</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="deleteClientButton">
+         <property name="styleSheet">
+          <string>background-color: red; color: white;</string>
+         </property>
+         <property name="text">
+          <string>Eliminar Cliente</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="editClientButton">
-       <property name="text">
-        <string>Editar Cliente</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="deleteClientButton">
-       <property name="text">
-        <string>Eliminar Cliente</string>
-       </property>
-       <property name="styleSheet">
-        <string>background-color: red; color: white;</string>
-       </property>
-      </widget>
+      <widget class="QListWidget" name="clientListWidget"/>
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QListWidget" name="clientListWidget"/>
+    <widget class="QGroupBox" name="clientDetailsGroupBox">
+     <property name="title">
+      <string>Detalles del Cliente</string>
+     </property>
+     <layout class="QVBoxLayout" name="detailsLayout">
+      <item>
+       <widget class="QLabel" name="nameLabel">
+        <property name="text">
+         <string>Nombre:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="dniLabel">
+        <property name="text">
+         <string>DNI:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="emailLabel">
+        <property name="text">
+         <string>Email:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="phoneLabel">
+        <property name="text">
+         <string>Teléfono:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="addressLabel">
+        <property name="text">
+         <string>Dirección:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="ageLabel">
+        <property name="text">
+         <string>Edad:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="idLabel">
+        <property name="text">
+         <string>ID:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="hexIdLabel">
+        <property name="text">
+         <string>ID Hexadecimal:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="vehicleListLabel">
+        <property name="text">
+         <string>Vehículos:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTableWidget" name="vehicleTableWidget">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>500</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+        <column>
+         <property name="text">
+          <string>Patente</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Marca</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Modelo</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Color</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Tipo</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
   </layout>
  </widget>

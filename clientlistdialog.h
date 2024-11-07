@@ -7,13 +7,11 @@
 #include <QListWidgetItem>
 #include "lib/SAPEICore/Client.h"
 #include "lib/SAPEICore/DataBase.h"
-#include "clientinfodialog.h"  // Incluir el nuevo diálogo de vehículos
 #include "editclientdialog.h"
 
 
 namespace Ui {
-class ClientListDialog; // Asegúrate de que esta línea esté presente
-}
+class ClientListDialog;}
 
 class ClientListDialog : public QDialog
 {
@@ -24,9 +22,9 @@ public:
     ~ClientListDialog();
 
 private slots:
-    void updateClientList();               // Muestra los nombres de los clientes en la lista
-    void onSearchTextChanged(const QString &text);  // Filtra los clientes por nombre
-    void onClientDoubleClicked(QListWidgetItem* item);  // Slot para doble clic en cliente
+    void updateClientList();             
+    void onSearchTextChanged(const QString &text);
+    void onClientDoubleClicked(QListWidgetItem* item);
     void onEditClientButtonClicked();
     void onDeleteClientButtonClicked();
 private:
