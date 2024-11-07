@@ -69,7 +69,7 @@ void ClientListDialog::onClientDoubleClicked(QListWidgetItem *item) {
 
     std::vector<Vehicle> vehicles = database->getVehiclesByClientId(client.getId());
 
-    ui->vehicleTableWidget->setRowCount(0);  
+ ui->vehicleTableWidget->setRowCount(0);  
     int rowCount = static_cast<int>(vehicles.size());
     ui->vehicleTableWidget->setRowCount(rowCount);  
     for (size_t row = 0; row < vehicles.size(); ++row) {

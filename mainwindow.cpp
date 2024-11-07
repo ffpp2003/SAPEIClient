@@ -162,29 +162,39 @@ bool MainWindow::validateId(const QString &id) {
 }
 
 void MainWindow::onIdReceived(const QString &id) {
-  qDebug() << "ID recibido";  
-  currentId = id;  
-  bool ok;
+    qDebug() << "ID recibido";  
+    currentId = id;  
+    bool ok;
 
-  if (validateId(currentId)) {
-    unsigned long long idInt = id.toULongLong(&ok, 16); 
-    qDebug() << "ID recibido: " << currentId;
-    Client client = db->getClientById(idInt);
-    ui->textBrowser->append("Cobro realizado a " + QString::fromStdString(client.getName()) + " por un monto de $" + QString::number(balanceHandler->loadPrice()) +". Saldo restante = $" + QString::number(db->getBalance(idInt)));
+    if (validateId(currentId)) {
+        unsigned long long idInt = id.toULongLong(&ok, 16); 
+        qDebug() << "ID recibido: " << currentId;
+        Client client = db->getClientById(idInt);
+        double currentBalance = db->getBalance(idInt);
+        double chargeAmount = balanceHandler->loadPrice();
 
-    balanceHandler->debit(idInt, balanceHandler->loadPrice() );
+        if (currentBalance >= chargeAmount || currentBalance - chargeAmount >= -chargeAmount) { 
+            balanceHandler->debit(idInt, chargeAmount);
 
+            ui->textBrowser->append("Cobro realizado a " + QString::fromStdString(client.getName()) + " por un monto de $" + QString::number(chargeAmount) +
+                                    ". Saldo restante = $" + QString::number(currentBalance - chargeAmount));
 
-    if (isAddingCardMode) {
-      addCard(currentId);
-      isAddingCardMode = false;
-      serialHandler->sendToArduino("yellow p off");
+            if (currentBalance - chargeAmount < 0) {
+                ui->textBrowser->append("Aviso: el saldo del cliente es negativo.");
+            }
+        } else {
+            ui->textBrowser->append("Saldo insuficiente para realizar el cobro.");
+        }
+
+        if (isAddingCardMode) {
+            addCard(currentId);
+            isAddingCardMode = false;
+        }
+    } else {
+        ui->textBrowser->append("ID no válido: " + id);
+        isAddingCardMode = false;
     }
-  } else {
-    ui->textBrowser->append("ID no válido: " + id);
-    isAddingCardMode = false;
-  }
-} 
+}
 
 void MainWindow::addCard(const QString &id){
   AddCardDialog dialog(this);
