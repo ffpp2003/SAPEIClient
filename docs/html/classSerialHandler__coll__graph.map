@@ -1,4 +1,0 @@
-<map id="SerialHandler" name="SerialHandler">
-<area shape="rect" id="node1" title="Clase que maneja la comunicación serie con un dispositivo (por ejemplo, Arduino)." alt="" coords="5,80,116,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="23,5,98,32"/>
-</map>
