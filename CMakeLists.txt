@@ -27,6 +27,7 @@ set(SOURCES
     lib/SAPEICore/Person.cpp
     lib/SAPEICore/Vehicle.cpp
     lib/SAPEICore/DataBase.cpp
+    lib/SAPEICore/Error.cpp
 )
 
 set(HEADERS
@@ -43,6 +44,7 @@ set(HEADERS
     lib/SAPEICore/Person.h
     lib/SAPEICore/Vehicle.h
     lib/SAPEICore/DataBase.h
+    lib/SAPEICore/Error.h
 )
 
 # Añade el archivo de recursos
