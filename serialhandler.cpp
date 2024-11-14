@@ -74,8 +74,10 @@ void SerialHandler::selectSerialPort() {
     if (dialog.exec() == QDialog::Accepted) {
         QString selectedPortName = comboBox.currentText();
         if (!selectedPortName.isEmpty()) {
-            connectSerialPort(selectedPortName);  // Conectar al puerto seleccionado
-            qDebug() << "Conectado a: " << selectedPortName;
+            if(connectSerialPort(selectedPortName))  // Conectar al puerto seleccionado
+              qDebug() << "Error para conectarse a: " << selectedPortName;
+            else
+              qDebug() << "Conectado a: " << selectedPortName;
         } else {
             qDebug() << "No se seleccionó ningún puerto.";
         }
@@ -85,7 +87,7 @@ void SerialHandler::selectSerialPort() {
 #include <QElapsedTimer>
 #include <QThread>
 
-void SerialHandler::connectSerialPort(const QString &portName) {
+int SerialHandler::connectSerialPort(const QString &portName) {
     // Si el puerto serie ya está abierto, ciérralo antes de cambiar al nuevo puerto
     if (serial->isOpen()) {
         serial->close();
@@ -101,34 +103,37 @@ void SerialHandler::connectSerialPort(const QString &portName) {
 
     if (serial->open(QIODevice::ReadWrite)) {
         qDebug() << "Conexión serial abierta en" << portName;
-
-        if (serial->waitForReadyRead(4000)) {  // Espera hasta 3 segundos para datos
+            serial->waitForReadyRead(4000);
             QByteArray initResponse = serial->readAll();
             // Enviar "SAPEI_INIT" al puerto serie
             sendToArduino("SAPEI_INIT");
-
             // Esperar "CONNECTED" en la respuesta
             if (serial->waitForReadyRead(3000)) {  // Espera hasta 3 segundos
                 QByteArray connectedResponse = serial->readAll();
                 if (connectedResponse.contains("CONNECTED")) {
                     qDebug() << "Conexión verificada: 'CONNECTED' recibido.";
                     connect(serial, &QSerialPort::readyRead, this, &SerialHandler::handleReadyRead);
+                    return 0;
                 } else {
                     qDebug() << "No se recibió respuesta 'CONNECTED'.";
                     serial->close();
+                    return 1;
                 }
             } else {
                 qDebug() << "Timeout: No se recibió 'CONNECTED'.";
                 serial->close();
+                return 1;
             }
-        }
     } else {
         qDebug() << "No se pudo abrir la conexión serial en" << portName;
         qDebug() << "Error:" << serial->errorString();
+        return 1;
     }
+    return 1;
 }
 
 void SerialHandler::sendToArduino(const QString &message) {
+    qDebug()<<"Mensaje terminal: " << message;
     if (serial->isOpen()) {
         QByteArray byteArray = (message + "\n").toUtf8();
         serial->write(byteArray);
