@@ -174,20 +174,9 @@ void MainWindow::onIdReceived(const QString &id) {
         double chargeAmount = balanceHandler->loadPrice();
 
       if(!isAddingCardMode){
-
+        QString msg = QString::number(balanceHandler->debit(idInt, chargeAmount));
+        serialHandler->sendToArduino(msg);
         // Verificación de saldo
-        if (currentBalance >= chargeAmount) { 
-            balanceHandler->debit(idInt, chargeAmount);
-
-            // Mensaje de confirmación de cobro
-            ui->textBrowser->append("Cobro realizado a " + QString::fromStdString(client.getName()) + " por un monto de $" + QString::number(chargeAmount) +
-                                    ". Saldo restante = $" + QString::number(currentBalance - chargeAmount));
-
-            // Aviso si el saldo es negativo
-        } else {
-            // Mensaje de saldo insuficiente
-            ui->textBrowser->append("Saldo insuficiente para realizar el cobro.");
-        }
       }
 
         // Modo de agregar tarjeta con verificación
