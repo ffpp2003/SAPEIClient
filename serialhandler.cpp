@@ -133,7 +133,6 @@ int SerialHandler::connectSerialPort(const QString &portName) {
 }
 
 void SerialHandler::sendToArduino(const QString &message) {
-    qDebug()<<"Mensaje terminal: " << message;
     if (serial->isOpen()) {
         QByteArray byteArray = (message + "\n").toUtf8();
         serial->write(byteArray);
