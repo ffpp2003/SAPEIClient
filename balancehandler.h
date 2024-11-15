@@ -29,7 +29,7 @@ public:
     double loadPrice();
     void savePrice(double price);
     void setPrice(double newPrice);
-    void openDialog();
+    int openDialog();
 
 private:
     int updateBalance(Client &client, double amount);

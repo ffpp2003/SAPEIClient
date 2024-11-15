@@ -101,7 +101,7 @@ void BalanceHandler::setPrice(double newPrice) {
 
 
 
-void BalanceHandler::openDialog() {
+int BalanceHandler::openDialog() {
     QDialog dialog;  // Crear el diálogo como variable local
     Ui::BalanceHandlerDialog ui;  // Instancia temporal para configurar la UI
     ui.setupUi(&dialog);
@@ -111,10 +111,6 @@ void BalanceHandler::openDialog() {
         QString clientName = ui.clientNameLineEdit->text();
         double amount = QLocale::system().toDouble(ui.amountSpinBox->text());
 
-        if (!clientName.isEmpty() && amount != 0) {
-            credit(clientName, amount);
-        } else {
-            qDebug() << "Nombre de cliente o monto inválido.";
-        }
+    return credit(clientName, amount);
     }
 }
