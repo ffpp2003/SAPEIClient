@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->clientListButton, &QPushButton::clicked, this, &MainWindow::onClientListButtonClicked);
     connect(ui->vehicleListButton, &QPushButton::clicked, this, &MainWindow::onVehicleListButtonClicked);
     connect(ui->confirmPriceButton, &QPushButton::clicked, this, &MainWindow::onConfirmPriceChangeClicked);
-    connect(ui->chargeBalanceButton, &QPushButton::clicked, balanceHandler, &BalanceHandler::openDialog);
+    connect(ui->chargeBalanceButton, &QPushButton::clicked, this, &MainWindow::openBalanceDialog);
     connect(balanceHandler, &BalanceHandler::balanceUpdated, this, &MainWindow::onBalanceUpdated);
     connect(balanceHandler, &BalanceHandler::balanceUpdateFailed, this, &MainWindow::onBalanceUpdateFailed);
 
@@ -91,6 +91,11 @@ void MainWindow::updateConnectionStatus() {
 
     scene->addItem(textItem);
     ui->connectionStatusView->setScene(scene);
+}
+
+void MainWindow::openBalanceDialog(){
+  QString msg = QString::number(balanceHandler->openDialog());
+  serialHandler->sendToArduino(msg);
 }
 
 void MainWindow::updatePriceDisplay()

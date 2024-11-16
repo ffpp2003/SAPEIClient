@@ -75,6 +75,7 @@ public:
     void addVehicleToClient();
     void changePrice();
     void updatePriceDisplay();
+    void openBalanceDialog();
 
 
 private slots:
