@@ -94,6 +94,7 @@ void MainWindow::updateConnectionStatus() {
 }
 
 void MainWindow::openBalanceDialog(){
+  isChargingMode = true;
   QString msg = QString::number(balanceHandler->openDialog());
   serialHandler->sendToArduino(msg);
 }
@@ -178,28 +179,29 @@ void MainWindow::onIdReceived(const QString &id) {
         double currentBalance = db->getBalance(idInt);
         double chargeAmount = balanceHandler->loadPrice();
 
-      if(!isAddingCardMode){
+      if(!(isAddingCardMode && isChargingMode)){
         QString msg = QString::number(balanceHandler->debit(idInt, chargeAmount));
         serialHandler->sendToArduino(msg);
         // Verificación de saldo
       }
-
-        // Modo de agregar tarjeta con verificación
-        if (isAddingCardMode) {
-            if (client.isNull()) {  // Verifica si el cliente no existe
-                if(addCard(currentId)){
-                ui->textBrowser->append("Tarjeta añadida con éxito.");
-                }else{
-                ui->textBrowser->append("No se pudo agregar la tarjeta.");
-                }
-            } else {
-                ui->textBrowser->append("ID ya existe en la base de datos. No se añade la tarjeta. El cliente es " + QString::fromStdString(client.getName()));
-            }
-            isAddingCardMode = false;
+      if(isChargingMode){
+        isChargingMode = false;
+      }
+      else if(isAddingCardMode){
+        if(!client.isNull()){
+          ui->textBrowser->append("ID ya existe en la base de datos. No se añade la tarjeta. El cliente es " + QString::fromStdString(client.getName()));
         }
-    } else {
-        ui->textBrowser->append("ID no válido: " + id);
+        else if(!addCard(currentId)){
+          ui->textBrowser->append("No se pudo agregar la tarjeta.");
+        }
+        else {
+        ui->textBrowser->append("Tarjeta añadida con éxito.");
+        }
         isAddingCardMode = false;
+      }
+    }
+    else {
+     ui->textBrowser->append("ID no válido: " + id);
     }
 }
 
