@@ -1,8 +1,8 @@
 #include "balancehandler.h"
-#include "ui_balancehandlerdialog.h"  // Incluir el archivo .ui
 
 BalanceHandler::BalanceHandler(DataBase *db, QObject *parent)
-    : QObject(parent), price(600), db(db) {}
+    : QObject(parent), price(600), db(db) {
+    }
 
 int BalanceHandler::credit(unsigned long long clientId, double amount) {
     Client client = db->getClientById(clientId);
@@ -101,16 +101,23 @@ void BalanceHandler::setPrice(double newPrice) {
 
 
 
-int BalanceHandler::openDialog() {
-    QDialog dialog;  // Crear el diálogo como variable local
-    Ui::BalanceHandlerDialog ui;  // Instancia temporal para configurar la UI
-    ui.setupUi(&dialog);
+int BalanceHandler::openDialog(int isCharging,const QString &name) {
+    if(!isCharging){
+      this->ui.setupUi(&dialog);
 
-    // Configurar conexiones, por ejemplo, conectar el botón de aceptar o rechazar
-    if (dialog.exec() == QDialog::Accepted) {
-        QString clientName = ui.clientNameLineEdit->text();
-        double amount = QLocale::system().toDouble(ui.amountSpinBox->text());
+      // Configurar conexiones, por ejemplo, conectar el botón de aceptar o rechazar
+      if (dialog.exec() == QDialog::Accepted) {
+          QString clientName = ui.clientNameLineEdit->text();
+          double amount = QLocale::system().toDouble(ui.amountSpinBox->text());
 
-    return credit(clientName, amount);
+      return credit(clientName, amount);
+      }
     }
+    else{
+      completeName(name, this->ui);
+    }
+}
+
+void BalanceHandler::completeName(const QString &name, Ui::BalanceHandlerDialog &ui){
+  ui.clientNameLineEdit->setText(name);
 }

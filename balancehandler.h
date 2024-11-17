@@ -10,6 +10,7 @@
 #include "QString"
 #include "lib/SAPEICore/DataBase.h"
 #include "lib/SAPEICore/Error.h"
+#include "ui_balancehandlerdialog.h"  // Incluir el archivo .ui
 
 class BalanceHandler : public QObject {
     Q_OBJECT
@@ -29,9 +30,12 @@ public:
     double loadPrice();
     void savePrice(double price);
     void setPrice(double newPrice);
-    int openDialog();
+    void completeName(const QString &name, Ui::BalanceHandlerDialog &ui);
+    int openDialog(int isCharging = 0,const QString &name = "");
 
 private:
+    Ui::BalanceHandlerDialog ui;
+    QDialog dialog;
     int updateBalance(Client &client, double amount);
     double price;
     DataBase *db;  // Puntero a la base de datos para operar sobre los clientes
