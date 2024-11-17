@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->clientListButton, &QPushButton::clicked, this, &MainWindow::onClientListButtonClicked);
     connect(ui->vehicleListButton, &QPushButton::clicked, this, &MainWindow::onVehicleListButtonClicked);
     connect(ui->confirmPriceButton, &QPushButton::clicked, this, &MainWindow::onConfirmPriceChangeClicked);
-    connect(ui->chargeBalanceButton, &QPushButton::clicked, balanceHandler, &BalanceHandler::openDialog);
+    connect(ui->chargeBalanceButton, &QPushButton::clicked, this, &MainWindow::openBalanceDialog);
     connect(balanceHandler, &BalanceHandler::balanceUpdated, this, &MainWindow::onBalanceUpdated);
     connect(balanceHandler, &BalanceHandler::balanceUpdateFailed, this, &MainWindow::onBalanceUpdateFailed);
 
@@ -91,6 +91,11 @@ void MainWindow::updateConnectionStatus() {
 
     scene->addItem(textItem);
     ui->connectionStatusView->setScene(scene);
+}
+
+void MainWindow::openBalanceDialog(){
+  QString msg = QString::number(balanceHandler->openDialog());
+  serialHandler->sendToArduino(msg);
 }
 
 void MainWindow::updatePriceDisplay()
@@ -162,31 +167,43 @@ bool MainWindow::validateId(const QString &id) {
 }
 
 void MainWindow::onIdReceived(const QString &id) {
-  qDebug() << "ID recibido";  
-  currentId = id;  
-  bool ok;
+    qDebug() << "ID recibido";  
+    currentId = id;  
+    bool ok;
 
-  if (validateId(currentId)) {
-    unsigned long long idInt = id.toULongLong(&ok, 16); 
-    qDebug() << "ID recibido: " << currentId;
-    Client client = db->getClientById(idInt);
-    ui->textBrowser->append("Cobro realizado a " + QString::fromStdString(client.getName()) + " por un monto de $" + QString::number(balanceHandler->loadPrice()) +". Saldo restante = $" + QString::number(db->getBalance(idInt)));
+    if (validateId(currentId)) {
+        unsigned long long idInt = id.toULongLong(&ok, 16); 
+        qDebug() << "ID recibido: " << currentId;
+        Client client = db->getClientById(idInt);
+        double currentBalance = db->getBalance(idInt);
+        double chargeAmount = balanceHandler->loadPrice();
 
-    balanceHandler->debit(idInt, balanceHandler->loadPrice() );
+      if(!isAddingCardMode){
+        QString msg = QString::number(balanceHandler->debit(idInt, chargeAmount));
+        serialHandler->sendToArduino(msg);
+        // Verificación de saldo
+      }
 
-
-    if (isAddingCardMode) {
-      addCard(currentId);
-      isAddingCardMode = false;
-      serialHandler->sendToArduino("yellow p off");
+        // Modo de agregar tarjeta con verificación
+        if (isAddingCardMode) {
+            if (client.isNull()) {  // Verifica si el cliente no existe
+                if(addCard(currentId)){
+                ui->textBrowser->append("Tarjeta añadida con éxito.");
+                }else{
+                ui->textBrowser->append("No se pudo agregar la tarjeta.");
+                }
+            } else {
+                ui->textBrowser->append("ID ya existe en la base de datos. No se añade la tarjeta. El cliente es " + QString::fromStdString(client.getName()));
+            }
+            isAddingCardMode = false;
+        }
+    } else {
+        ui->textBrowser->append("ID no válido: " + id);
+        isAddingCardMode = false;
     }
-  } else {
-    ui->textBrowser->append("ID no válido: " + id);
-    isAddingCardMode = false;
-  }
-} 
+}
 
-void MainWindow::addCard(const QString &id){
+bool MainWindow::addCard(const QString &id){
   AddCardDialog dialog(this);
   if (dialog.exec() == QDialog::Accepted) {           
     QString name = dialog.getName();
@@ -226,8 +243,10 @@ void MainWindow::addCard(const QString &id){
     try {
         db->addClient(newClient);
         ui->textBrowser->append("Cliente agregado: " + name + " " + lastName + " con ID: " + id);
+        return 1;
     } catch (const std::runtime_error& e) {
         ui->textBrowser->append("Error al agregar el cliente: " + QString::fromStdString(e.what()));
+        return 0;
     }
   }
 }

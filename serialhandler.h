@@ -40,7 +40,7 @@ public:
      * @brief Conecta al puerto serie especificado.
      * @param portName Nombre del puerto serie al que se conectará.
      */
-    void connectSerialPort(const QString &portName);
+    int connectSerialPort(const QString &portName);
 
     /**
      * @brief Envía un mensaje al dispositivo conectado por el puerto serie.

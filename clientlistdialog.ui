@@ -112,6 +112,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="balanceLabel">
+        <property name="text">
+         <string>Balance:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="vehicleListLabel">
         <property name="text">
          <string>Vehículos:</string>

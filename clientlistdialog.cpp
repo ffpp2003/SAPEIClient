@@ -66,10 +66,11 @@ void ClientListDialog::onClientDoubleClicked(QListWidgetItem *item) {
     ui->ageLabel->setText("Edad: " + QString::number(client.getAge()));
     ui->idLabel->setText("ID: " + QString::number(client.getId()));
     ui->hexIdLabel->setText("ID Hexadecimal: " + QString::number(client.getId(), 16).toUpper());
+    ui->balanceLabel->setText("Saldo: " + QString::number(client.getBalance()));
 
     std::vector<Vehicle> vehicles = database->getVehiclesByClientId(client.getId());
 
-    ui->vehicleTableWidget->setRowCount(0);  
+ ui->vehicleTableWidget->setRowCount(0);  
     int rowCount = static_cast<int>(vehicles.size());
     ui->vehicleTableWidget->setRowCount(rowCount);  
     for (size_t row = 0; row < vehicles.size(); ++row) {
@@ -101,7 +102,9 @@ void ClientListDialog::deleteClient(){
         return;
     }
     
-    std::string clientName = selectedItem->text().toStdString();
+    QString clientText = selectedItem->text();
+    QStringList parts = clientText.split(" - DNI: "); 
+    std::string clientName = parts[0].toStdString();
     Client client = database->getClientByName(clientName);
     unsigned long long clientId = client.getId();
 
@@ -124,7 +127,9 @@ void ClientListDialog::updateClient(){
         return;
     }
     
-    std::string clientName = selectedItem->text().toStdString();
+    QString clientText = selectedItem->text();
+    QStringList parts = clientText.split(" - DNI: "); 
+    std::string clientName = parts[0].toStdString();
     Client client = database->getClientByName(clientName);
     
     EditClientDialog editDialog(this);

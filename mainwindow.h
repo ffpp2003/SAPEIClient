@@ -69,12 +69,13 @@ public:
      * @brief Agrega una tarjeta a la base de datos utilizando el ID proporcionado.
      * @param id Cadena de texto con el ID de la tarjeta.
      */
-    void addCard(const QString &id);
+    bool addCard(const QString &id);
     
 
     void addVehicleToClient();
     void changePrice();
     void updatePriceDisplay();
+    void openBalanceDialog();
 
 
 private slots:
