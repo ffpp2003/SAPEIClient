@@ -185,6 +185,8 @@ void MainWindow::onIdReceived(const QString &id) {
         // Verificación de saldo
       }
       if(isChargingMode){
+        QString nombre = QString::fromStdString(client.getName());
+        balanceHandler->openDialog(isChargingMode, nombre);
         isChargingMode = false;
       }
       else if(isAddingCardMode){
