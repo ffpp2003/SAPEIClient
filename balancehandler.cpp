@@ -1,8 +1,10 @@
 #include "balancehandler.h"
-#include "ui_balancehandlerdialog.h"  // Incluir el archivo .ui
 
 BalanceHandler::BalanceHandler(DataBase *db, QObject *parent)
-    : QObject(parent), price(600), db(db) {}
+    : QObject(parent), price(600), db(db) {
+      this->ui.setupUi(&dialog);
+      dialog.installEventFilter(this);
+    }
 
 int BalanceHandler::credit(unsigned long long clientId, double amount) {
     Client client = db->getClientById(clientId);
@@ -12,6 +14,8 @@ int BalanceHandler::credit(unsigned long long clientId, double amount) {
     }
     return updateBalance(client, amount);
 }
+
+
 
 int BalanceHandler::credit(const QString &name, double amount) {
     Client client = db->getClientByName(name.toStdString());
@@ -101,16 +105,36 @@ void BalanceHandler::setPrice(double newPrice) {
 
 
 
-int BalanceHandler::openDialog() {
-    QDialog dialog;  // Crear el diálogo como variable local
-    Ui::BalanceHandlerDialog ui;  // Instancia temporal para configurar la UI
-    ui.setupUi(&dialog);
+int BalanceHandler::openDialog(int isCharging,const QString &name) {
+  if(!isCharging){
+    this->ui.clientNameLineEdit->setText("");
+    this->ui.amountSpinBox->setValue(0.00);
 
     // Configurar conexiones, por ejemplo, conectar el botón de aceptar o rechazar
     if (dialog.exec() == QDialog::Accepted) {
-        QString clientName = ui.clientNameLineEdit->text();
-        double amount = QLocale::system().toDouble(ui.amountSpinBox->text());
+      QString clientName = ui.clientNameLineEdit->text();
+      double amount = QLocale::system().toDouble(ui.amountSpinBox->text());
 
     return credit(clientName, amount);
     }
+  }
+  else{
+    completeName(name, this->ui);
+  }
+}
+
+void BalanceHandler::completeName(const QString &name, Ui::BalanceHandlerDialog &ui){
+  ui.clientNameLineEdit->setText(name);
+}
+
+bool BalanceHandler::eventFilter(QObject *watched, QEvent *event) {
+    // Check if the watched object is the dialog and the event is a close event
+    if (watched == &dialog && event->type() == QEvent::Close) {
+        // Emit the custom signal when the dialog is closed
+        emit windowClosed();
+        // Allow the dialog to close
+        return false;
+    }
+    // Pass the event to the base class for default processing
+    return QObject::eventFilter(watched, event);
 }
