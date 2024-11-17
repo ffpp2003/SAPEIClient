@@ -2,6 +2,7 @@
 
 BalanceHandler::BalanceHandler(DataBase *db, QObject *parent)
     : QObject(parent), price(600), db(db) {
+      this->ui.setupUi(&dialog);
     }
 
 int BalanceHandler::credit(unsigned long long clientId, double amount) {
@@ -102,20 +103,21 @@ void BalanceHandler::setPrice(double newPrice) {
 
 
 int BalanceHandler::openDialog(int isCharging,const QString &name) {
-    if(!isCharging){
-      this->ui.setupUi(&dialog);
+  if(!isCharging){
+    this->ui.clientNameLineEdit->setText("");
+    this->ui.amountSpinBox->setValue(0.00);
 
-      // Configurar conexiones, por ejemplo, conectar el botón de aceptar o rechazar
-      if (dialog.exec() == QDialog::Accepted) {
-          QString clientName = ui.clientNameLineEdit->text();
-          double amount = QLocale::system().toDouble(ui.amountSpinBox->text());
+    // Configurar conexiones, por ejemplo, conectar el botón de aceptar o rechazar
+    if (dialog.exec() == QDialog::Accepted) {
+      QString clientName = ui.clientNameLineEdit->text();
+      double amount = QLocale::system().toDouble(ui.amountSpinBox->text());
 
-      return credit(clientName, amount);
-      }
+    return credit(clientName, amount);
     }
-    else{
-      completeName(name, this->ui);
-    }
+  }
+  else{
+    completeName(name, this->ui);
+  }
 }
 
 void BalanceHandler::completeName(const QString &name, Ui::BalanceHandlerDialog &ui){
