@@ -10,12 +10,15 @@ MainWindow::MainWindow(QWidget *parent)
      isChargingMode(false),
      ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    
+
     QMovie *movie = new QMovie(":/utnlogo.gif"); // Reemplaza con la ruta de tu GIF
     ui->utnLogo->setMovie(movie);
     movie->start(); // Iniciar la animación
+
     ui->utnLogo->setScaledContents(true); // Permitir que el QLabel ajuste su contenido
-   
+    
+    updateAddCardState();
+
     try {
         ui->textBrowser->append("Base de datos inicializada correctamente.");
     } catch (const std::runtime_error& e) {
@@ -39,7 +42,6 @@ MainWindow::MainWindow(QWidget *parent)
     QTimer *connectionStatusTimer = new QTimer(this);
     connect(connectionStatusTimer, &QTimer::timeout, this, &MainWindow::updateConnectionStatus);
     connectionStatusTimer->start(1000);
-      
     QString configFileName = "configfile.conf";
     QFile configFile(configFileName);
 
@@ -94,6 +96,7 @@ void MainWindow::updateConnectionStatus() {
 
     scene->addItem(textItem);
     ui->connectionStatusView->setScene(scene);
+    updateAddCardState();
 }
 
 void MainWindow::openBalanceDialog(){
@@ -257,51 +260,79 @@ bool MainWindow::addCard(const QString &id){
   }
 }
 
-void MainWindow::addVehicleToClient(){
+void MainWindow::addVehicleToClient() {
     bool ok;
     QString inputName = QInputDialog::getText(this, "Agregar Vehículo",
-                                            "Ingrese el nombre del cliente:",
-                                            QLineEdit::Normal, "", &ok);
+                                              "Ingrese el nombre del cliente:",
+                                              QLineEdit::Normal, "", &ok);
+    
+    // Verificar si se presionó "Cancelar" en el diálogo
+    if (!ok) {
+        ui->textBrowser->append("Operación de agregar vehículo cancelada.");
+        return;
+    }
 
-        // Recupera el cliente utilizando clientId
-        Client client;
-        
-        if((client = db->getClientByName(inputName.toStdString())).isNull()){
-          QMessageBox::warning(this, "Cliente no encontrado", "El cliente con el nombre ingresado no existe en la base de datos.");
-          return;
-        }else{
-          std::cout << client << std::endl;
-        }
+    // Recupera el cliente utilizando clientId
+    Client client;
 
-        unsigned long long clientId = client.getId();
+    if ((client = db->getClientByName(inputName.toStdString())).isNull()) {
+        QMessageBox::warning(this, "Cliente no encontrado", 
+                             "El cliente con el nombre ingresado no existe en la base de datos.");
+        return;
+    } else {
+        std::cout << client << std::endl;
+    }
+
+    unsigned long long clientId = client.getId();
 
     // Abrir un diálogo para ingresar los datos del vehículo
-        AddVehicleDialog vehicleDialog(this);
-        if (vehicleDialog.exec() == QDialog::Accepted) {
-            QString license = vehicleDialog.getLicense();
-            QString type = vehicleDialog.getType();
-            QString color = vehicleDialog.getColor();
-            QString brand = vehicleDialog.getBrand();
-            QString model = vehicleDialog.getModel();
+    AddVehicleDialog vehicleDialog(this);
+    if (vehicleDialog.exec() == QDialog::Accepted) {
+        QString license = vehicleDialog.getLicense();
+        QString type = vehicleDialog.getType();
+        QString color = vehicleDialog.getColor();
+        QString brand = vehicleDialog.getBrand();
+        QString model = vehicleDialog.getModel();
 
-            // Crear el objeto Vehicle
-            Vehicle newVehicle(license.toStdString(), type.toStdString(),
-                               color.toStdString(), brand.toStdString(),
-                               model.toStdString());
+        // Crear el objeto Vehicle
+        Vehicle newVehicle(license.toStdString(), type.toStdString(),
+                           color.toStdString(), brand.toStdString(),
+                           model.toStdString());
 
-            // Agregar el vehículo al cliente en la base de datos
-            try {
-                db->addVehicle(clientId, newVehicle); // Usa addVehicle de DataBase
-                ui->textBrowser->append("Vehículo agregado al cliente " + inputName);
-            } catch (const std::runtime_error& e) {
-                ui->textBrowser->append("Error al agregar el vehículo: " + QString::fromStdString(e.what()));
-            }
-        } else {
-            ui->textBrowser->append("Operación de agregar vehículo cancelada.");
+        // Agregar el vehículo al cliente en la base de datos
+        try {
+            db->addVehicle(clientId, newVehicle); // Usa addVehicle de DataBase
+            ui->textBrowser->append("Vehículo agregado al cliente " + inputName);
+        } catch (const std::runtime_error& e) {
+            ui->textBrowser->append("Error al agregar el vehículo: " + QString::fromStdString(e.what()));
         }
-   
+    } else {
+        ui->textBrowser->append("Operación de agregar vehículo cancelada.");
+    }
 }
 
 void MainWindow::onClosedChargeWindow(){
   isChargingMode = false;
+}
+
+void MainWindow::updateAddCardState(){
+  if(serialHandler->isConnected()){
+    ui->addCardButton->setEnabled(true);
+    ui->addCardButton->setStyleSheet(
+    "QPushButton {"
+        "background-color: #2d2d2d;"
+        "color: #ffffff;"
+        "border: 1px solid #3c3c3c;"
+        "padding: 5px;"
+        "border-radius: 4px;"
+    "}"
+    "QPushButton:hover {"
+        "background-color: #3c3c3c;"
+    "}"
+    );
+  }
+  else{
+    ui->addCardButton->setEnabled(false);
+    ui->addCardButton->setStyleSheet("background-color: #1c1c1c; color: #eeeeee;");
+  }
 }
