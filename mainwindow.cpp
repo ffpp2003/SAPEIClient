@@ -10,14 +10,16 @@ MainWindow::MainWindow(QWidget *parent)
      isChargingMode(false),
      ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    
+
     QMovie *movie = new QMovie(":/utnlogo.gif"); // Reemplaza con la ruta de tu GIF
     movie->setScaledSize(QSize(200, 200));
     ui->utnLogo->setMovie(movie);
     movie->start(); // Iniciar la animación
     ui->utnLogo->setFixedSize(200, 200);
     ui->utnLogo->setScaledContents(false); // Permitir que el QLabel ajuste su contenido
-   
+
+    updateAddCardState();
+
     try {
         ui->textBrowser->append("Base de datos inicializada correctamente.");
     } catch (const std::runtime_error& e) {
@@ -41,7 +43,6 @@ MainWindow::MainWindow(QWidget *parent)
     QTimer *connectionStatusTimer = new QTimer(this);
     connect(connectionStatusTimer, &QTimer::timeout, this, &MainWindow::updateConnectionStatus);
     connectionStatusTimer->start(1000);
-      
     QString configFileName = "configfile.conf";
     QFile configFile(configFileName);
 
@@ -96,6 +97,7 @@ void MainWindow::updateConnectionStatus() {
 
     scene->addItem(textItem);
     ui->connectionStatusView->setScene(scene);
+    updateAddCardState();
 }
 
 void MainWindow::openBalanceDialog(){
@@ -312,4 +314,26 @@ void MainWindow::addVehicleToClient() {
 
 void MainWindow::onClosedChargeWindow(){
   isChargingMode = false;
+}
+
+void MainWindow::updateAddCardState(){
+  if(serialHandler->isConnected()){
+    ui->addCardButton->setEnabled(true);
+    ui->addCardButton->setStyleSheet(
+    "QPushButton {"
+        "background-color: #2d2d2d;"
+        "color: #ffffff;"
+        "border: 1px solid #3c3c3c;"
+        "padding: 5px;"
+        "border-radius: 4px;"
+    "}"
+    "QPushButton:hover {"
+        "background-color: #3c3c3c;"
+    "}"
+    );
+  }
+  else{
+    ui->addCardButton->setEnabled(false);
+    ui->addCardButton->setStyleSheet("background-color: #1c1c1c; color: #eeeeee;");
+  }
 }
