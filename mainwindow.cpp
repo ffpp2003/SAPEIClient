@@ -28,11 +28,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->clientListButton, &QPushButton::clicked, this, &MainWindow::onClientListButtonClicked);
     connect(ui->vehicleListButton, &QPushButton::clicked, this, &MainWindow::onVehicleListButtonClicked);
     connect(ui->confirmPriceButton, &QPushButton::clicked, this, &MainWindow::onConfirmPriceChangeClicked);
-    connect(balanceHandler->ui.acceptButton, &QPushButton::clicked, this, &MainWindow::onAcceptOrCancelButtonClicked);
-    connect(balanceHandler->ui.cancelButton, &QPushButton::clicked, this, &MainWindow::onAcceptOrCancelButtonClicked);
     connect(ui->chargeBalanceButton, &QPushButton::clicked, this, &MainWindow::openBalanceDialog);
     connect(balanceHandler, &BalanceHandler::balanceUpdated, this, &MainWindow::onBalanceUpdated);
     connect(balanceHandler, &BalanceHandler::balanceUpdateFailed, this, &MainWindow::onBalanceUpdateFailed);
+    connect(balanceHandler, &BalanceHandler::windowClosed, this, &MainWindow::onClosedChargeWindow);
+    connect(balanceHandler->ui.acceptButton, &QPushButton::clicked, this, &MainWindow::onClosedChargeWindow);
+    connect(balanceHandler->ui.cancelButton, &QPushButton::clicked, this, &MainWindow::onClosedChargeWindow);
 
 
     QTimer *connectionStatusTimer = new QTimer(this);
@@ -301,6 +302,6 @@ void MainWindow::addVehicleToClient(){
    
 }
 
-void MainWindow::onAcceptOrCancelButtonClicked(){
+void MainWindow::onClosedChargeWindow(){
   isChargingMode = false;
 }
