@@ -103,6 +103,7 @@ private slots:
     void onBalanceUpdated(const QString &message);  // Slot para manejar la señal de actualización
     void onBalanceUpdateFailed(const QString &message);  // Slot para manejar el error
 private:
+    void onAcceptOrCancelButtonClicked();
     SerialHandler *serialHandler; ///< Manejador de comunicación serial.
     DataBase *db; ///< Puntero a la base de datos utilizada para almacenar los clientes y tarjetas.
     BalanceHandler *balanceHandler;  // BalanceHandler como atributo

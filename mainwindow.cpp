@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->clientListButton, &QPushButton::clicked, this, &MainWindow::onClientListButtonClicked);
     connect(ui->vehicleListButton, &QPushButton::clicked, this, &MainWindow::onVehicleListButtonClicked);
     connect(ui->confirmPriceButton, &QPushButton::clicked, this, &MainWindow::onConfirmPriceChangeClicked);
+    connect(balanceHandler->ui.acceptButton, &QPushButton::clicked, this, &MainWindow::onAcceptOrCancelButtonClicked);
+    connect(balanceHandler->ui.cancelButton, &QPushButton::clicked, this, &MainWindow::onAcceptOrCancelButtonClicked);
     connect(ui->chargeBalanceButton, &QPushButton::clicked, this, &MainWindow::openBalanceDialog);
     connect(balanceHandler, &BalanceHandler::balanceUpdated, this, &MainWindow::onBalanceUpdated);
     connect(balanceHandler, &BalanceHandler::balanceUpdateFailed, this, &MainWindow::onBalanceUpdateFailed);
@@ -179,7 +181,7 @@ void MainWindow::onIdReceived(const QString &id) {
         double currentBalance = db->getBalance(idInt);
         double chargeAmount = balanceHandler->loadPrice();
 
-      if(!(isAddingCardMode && isChargingMode)){
+      if(!(isAddingCardMode || isChargingMode)){
         QString msg = QString::number(balanceHandler->debit(idInt, chargeAmount));
         serialHandler->sendToArduino(msg);
         // Verificación de saldo
@@ -187,7 +189,6 @@ void MainWindow::onIdReceived(const QString &id) {
       if(isChargingMode){
         QString nombre = QString::fromStdString(client.getName());
         balanceHandler->openDialog(isChargingMode, nombre);
-        isChargingMode = false;
       }
       else if(isAddingCardMode){
         if(!client.isNull()){
@@ -298,4 +299,8 @@ void MainWindow::addVehicleToClient(){
             ui->textBrowser->append("Operación de agregar vehículo cancelada.");
         }
    
+}
+
+void MainWindow::onAcceptOrCancelButtonClicked(){
+  isChargingMode = false;
 }

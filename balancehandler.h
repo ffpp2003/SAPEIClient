@@ -32,9 +32,9 @@ public:
     void setPrice(double newPrice);
     void completeName(const QString &name, Ui::BalanceHandlerDialog &ui);
     int openDialog(int isCharging = 0,const QString &name = "");
+    Ui::BalanceHandlerDialog ui;
 
 private:
-    Ui::BalanceHandlerDialog ui;
     QDialog dialog;
     int updateBalance(Client &client, double amount);
     double price;
