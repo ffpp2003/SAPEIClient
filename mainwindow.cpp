@@ -12,11 +12,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     
     QMovie *movie = new QMovie(":/utnlogo.gif"); // Reemplaza con la ruta de tu GIF
-    movie->setScaledSize(QSize(200, 200));
     ui->utnLogo->setMovie(movie);
     movie->start(); // Iniciar la animación
-    ui->utnLogo->setFixedSize(200, 200);
-    ui->utnLogo->setScaledContents(false); // Permitir que el QLabel ajuste su contenido
+    ui->utnLogo->setScaledContents(true); // Permitir que el QLabel ajuste su contenido
    
     try {
         ui->textBrowser->append("Base de datos inicializada correctamente.");

@@ -226,10 +226,22 @@
       </item>
       <item>
        <widget class="QLabel" name="utnLogo">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>640</width>
+          <width>0</width>
           <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>400</width>
+          <height>400</height>
          </size>
         </property>
         <property name="toolTip">
