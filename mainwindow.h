@@ -103,6 +103,7 @@ private slots:
     void onBalanceUpdated(const QString &message);  // Slot para manejar la señal de actualización
     void onBalanceUpdateFailed(const QString &message);  // Slot para manejar el error
     void updateAddCardState();
+    void onClientNotFound();
 private:
     void onClosedChargeWindow();
     SerialHandler *serialHandler; ///< Manejador de comunicación serial.

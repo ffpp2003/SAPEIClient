@@ -20,6 +20,7 @@ signals:
     void balanceUpdated(const QString &message);  // Señal para notificar a MainWindow
     void balanceUpdateFailed(const QString &message);
     void windowClosed();  // Custom signal to indicate window closure
+    void clientNotFound();
 
 public:
     explicit BalanceHandler(DataBase *db, QObject *parent = nullptr);
