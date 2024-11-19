@@ -11,12 +11,12 @@ MainWindow::MainWindow(QWidget *parent)
      ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
-    QMovie *movie = new QMovie(":/utnlogo.gif"); // Reemplaza con la ruta de tu GIF
+    QMovie *movie = new QMovie(":/utnlogo.gif");
     movie->setScaledSize(QSize(200, 200));
     ui->utnLogo->setMovie(movie);
-    movie->start(); // Iniciar la animación
+    movie->start();
     ui->utnLogo->setFixedSize(200, 200);
-    ui->utnLogo->setScaledContents(false); // Permitir que el QLabel ajuste su contenido
+    ui->utnLogo->setScaledContents(false);
 
     updateAddCardState();
 
@@ -50,21 +50,18 @@ MainWindow::MainWindow(QWidget *parent)
     if (!QFileInfo::exists(configFileName)) {
         if (configFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
             QTextStream out(&configFile);
-            out << 600; // Precio por defecto
+            out << 600;
             configFile.close();
         }
     }
 
-    // Leer el precio desde el archivo y establecerlo
     if (configFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&configFile);
         double fileprice;
-        in >> fileprice; // Leer el precio del archivo
+        in >> fileprice;
         configFile.close();
 
-        // Establecer el precio en la variable price y en el display
-        updatePriceDisplay(); // Llamar a tu función de actu                     //
-                                   
+        updatePriceDisplay();
     }
 
 }
@@ -79,7 +76,6 @@ void MainWindow::onSelectSerialPortClicked() {
 
 
 void MainWindow::updateConnectionStatus() {
-    // Verifica el estado de conexión a través de SerialHandler
     QGraphicsScene* scene = new QGraphicsScene(this);
     QGraphicsTextItem* textItem = new QGraphicsTextItem;
 
@@ -92,8 +88,8 @@ void MainWindow::updateConnectionStatus() {
     }
 
     QFont font = textItem->font();
-    font.setPointSize(24);  // Tamaño de la fuente
-    font.setBold(true);     // Texto en negrita
+    font.setPointSize(24);
+    font.setBold(true);
     textItem->setFont(font);
 
     scene->addItem(textItem);
@@ -127,7 +123,7 @@ void MainWindow::on_addCardButton_clicked() {
 
 void MainWindow::onAddVehicleButtonClicked()
 {
-    addVehicleToClient();  // Llama a la función que muestra el diálogo de vehículo
+    addVehicleToClient();
 }
 
 void MainWindow::onClientListButtonClicked()
@@ -148,11 +144,11 @@ void MainWindow::onConfirmPriceChangeClicked() {
 }
 
 void MainWindow::onBalanceUpdated(const QString &message) {
-    ui->textBrowser->append("Éxito: " + message);  // Actualizar la interfaz con el mensaje
+    ui->textBrowser->append("Éxito: " + message);
 }
 
 void MainWindow::onBalanceUpdateFailed(const QString &message) {
-    ui->textBrowser->append("Error: " + message);  // Mostrar el error en la interfaz
+    ui->textBrowser->append("Error: " + message);
 }
 
 void MainWindow::onClientNotFound(){
@@ -173,15 +169,15 @@ void MainWindow::changePrice(){
 
 bool MainWindow::validateId(const QString &id) {
     if (id.length() != 8) {
-        qDebug() << "ID no válido";  
-        return false;  
+        qDebug() << "ID no válido";
+        return false;
     }
-    return true;  
+    return true;
 }
 
 void MainWindow::onIdReceived(const QString &id) {
-    qDebug() << "ID recibido";  
-    currentId = id;  
+    qDebug() << "ID recibido";
+    currentId = id;
     bool ok;
 
     if (validateId(currentId)) {
@@ -194,7 +190,6 @@ void MainWindow::onIdReceived(const QString &id) {
       if(!(isAddingCardMode || isChargingMode)){
         QString msg = QString::number(balanceHandler->debit(idInt, chargeAmount));
         serialHandler->sendToArduino(msg);
-        // Verificación de saldo
       }
       if(isChargingMode){
         QString nombre = QString::fromStdString(client.getName());
@@ -271,14 +266,12 @@ void MainWindow::addVehicleToClient() {
     QString inputName = QInputDialog::getText(this, "Agregar Vehículo",
                                               "Ingrese el nombre del cliente:",
                                               QLineEdit::Normal, "", &ok);
-    
-    // Verificar si se presionó "Cancelar" en el diálogo
+
     if (!ok) {
         ui->textBrowser->append("Operación de agregar vehículo cancelada.");
         return;
     }
 
-    // Recupera el cliente utilizando clientId
     Client client;
 
     if ((client = db->getClientByName(inputName.toStdString())).isNull()) {
@@ -291,7 +284,6 @@ void MainWindow::addVehicleToClient() {
 
     unsigned long long clientId = client.getId();
 
-    // Abrir un diálogo para ingresar los datos del vehículo
     AddVehicleDialog vehicleDialog(this);
     if (vehicleDialog.exec() == QDialog::Accepted) {
         QString license = vehicleDialog.getLicense();
@@ -300,14 +292,12 @@ void MainWindow::addVehicleToClient() {
         QString brand = vehicleDialog.getBrand();
         QString model = vehicleDialog.getModel();
 
-        // Crear el objeto Vehicle
         Vehicle newVehicle(license.toStdString(), type.toStdString(),
                            color.toStdString(), brand.toStdString(),
                            model.toStdString());
 
-        // Agregar el vehículo al cliente en la base de datos
         try {
-            db->addVehicle(clientId, newVehicle); // Usa addVehicle de DataBase
+            db->addVehicle(clientId, newVehicle);
             ui->textBrowser->append("Vehículo agregado al cliente " + inputName);
         } catch (const std::runtime_error& e) {
             ui->textBrowser->append("Error al agregar el vehículo: " + QString::fromStdString(e.what()));

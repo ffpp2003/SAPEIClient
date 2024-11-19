@@ -36,8 +36,7 @@ QString AddCardDialog::getAddress() const {
 }
 
 int AddCardDialog::getAge() const {
-    return ui->ageSpinBox->value();  // Si usas un QSpinBox
-}
+    return ui->ageSpinBox->value();}
 
 QString AddCardDialog::getLicense() const {
     return ui->licenseLineEdit->text();

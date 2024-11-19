@@ -33,7 +33,7 @@ int BalanceHandler::debit(unsigned long long clientId, double amount) {
         emit clientNotFound();
         return TR_CLIENT_NOT_FOUND;
     }
-    return updateBalance(client, -amount);  // Restar del balance
+    return updateBalance(client, -amount);
 }
 
 int BalanceHandler::debit(const QString &name, double amount) {
@@ -42,7 +42,7 @@ int BalanceHandler::debit(const QString &name, double amount) {
         qDebug() << "Cliente no encontrado con nombre:" << name;
         return TR_CLIENT_NOT_FOUND;
     }
-    return updateBalance(client, -amount);  // Restar del balance
+    return updateBalance(client, -amount);
 }
 
 int BalanceHandler::updateBalance(Client &client, double amount) {
@@ -100,7 +100,7 @@ void BalanceHandler::savePrice(double price) {
 }
 
 void BalanceHandler::setPrice(double newPrice) {
-    savePrice(newPrice);  // Guardar el nuevo precio en el archivo
+    savePrice(newPrice);
 }
 
 
@@ -129,13 +129,9 @@ void BalanceHandler::completeName(const QString &name, Ui::BalanceHandlerDialog 
 }
 
 bool BalanceHandler::eventFilter(QObject *watched, QEvent *event) {
-    // Check if the watched object is the dialog and the event is a close event
     if (watched == &dialog && event->type() == QEvent::Close) {
-        // Emit the custom signal when the dialog is closed
         emit windowClosed();
-        // Allow the dialog to close
         return false;
     }
-    // Pass the event to the base class for default processing
     return QObject::eventFilter(watched, event);
 }

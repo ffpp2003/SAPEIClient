@@ -11,7 +11,7 @@
 
 
 namespace Ui {
-    class VehicleListDialog; // Cambiar "VehicleListDialog" por "ClientListDialog"
+    class VehicleListDialog;
 }
 
 class VehicleListDialog : public QDialog
@@ -23,8 +23,8 @@ public:
     ~VehicleListDialog();
 
 private slots:
-    void updateVehicleList();               // Muestra los nombres de los clientes en la lista
-    void onSearchTextChanged(const QString &text);  // Filtra los clientes por nombre
+    void updateVehicleList();
+    void onSearchTextChanged(const QString &text);
     void onEditVehicleButtonClicked();
     void onDeleteVehicleButtonClicked();
     void onVehicleDoubleClicked(QListWidgetItem *item);
