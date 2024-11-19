@@ -11,12 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
      ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
-    QMovie *movie = new QMovie(":/utnlogo.gif");
-    movie->setScaledSize(QSize(200, 200));
-    ui->utnLogo->setMovie(movie);
-    movie->start();
-    ui->utnLogo->setFixedSize(200, 200);
-    ui->utnLogo->setScaledContents(false);
+    setupFloatingGif();
 
     updateAddCardState();
 
@@ -73,6 +68,47 @@ void MainWindow::onSelectSerialPortClicked() {
     serialHandler->selectSerialPort();
 }
 
+void MainWindow::resizeEvent(QResizeEvent *event) {
+    QMainWindow::resizeEvent(event);
+
+    QGraphicsView *connectionStatusView = findChild<QGraphicsView *>("connectionStatusView");
+    if (!connectionStatusView) return;
+
+    QLabel *floatingGif = connectionStatusView->findChild<QLabel *>("floatingGif");
+    if (!floatingGif) return;
+
+    int gifWidth = 100;
+    int gifHeight = 100;
+    floatingGif->setGeometry(connectionStatusView->width() - gifWidth,
+                             0, 
+                             gifWidth, 
+                             gifHeight);
+}
+
+void MainWindow::setupFloatingGif() {
+    QGraphicsView *connectionStatusView = findChild<QGraphicsView *>("connectionStatusView");
+
+    QLabel *floatingGif = new QLabel(connectionStatusView);
+    floatingGif->setAttribute(Qt::WA_TranslucentBackground); // Fondo transparente
+    floatingGif->setAttribute(Qt::WA_NoSystemBackground);
+    floatingGif->setObjectName("floatingGif");
+
+    QMovie *gifMovie = new QMovie(":/utnlogo.gif");
+
+    int gifWidth = 100;
+    int gifHeight = 100;
+    gifMovie->setScaledSize(QSize(gifWidth, gifHeight));
+
+    floatingGif->setMovie(gifMovie);
+    gifMovie->start();
+
+    floatingGif->setGeometry(connectionStatusView->width() - gifWidth, 
+                             0, 
+                             gifWidth, 
+                             gifHeight);
+
+    floatingGif->raise();
+}
 
 void MainWindow::updateConnectionStatus() {
     QGraphicsScene* scene = new QGraphicsScene(this);

@@ -224,19 +224,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QLabel" name="utnLogo">
-        <property name="minimumSize">
-         <size>
-          <width>640</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>Logo Animado</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
     <item>

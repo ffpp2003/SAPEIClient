@@ -31,6 +31,10 @@
 #include <QFile>
 #include <QTextStream>
 #include <QFileInfo>
+#include <QLabel>
+#include <QGraphicsView>
+#include <QVBoxLayout>
+#include <QResizeEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -77,7 +81,6 @@ public:
     void updatePriceDisplay();
     void openBalanceDialog();
 
-
 private slots:
     /**
      * @brief Slot que maneja el evento cuando se presiona el botón para agregar una tarjeta.
@@ -105,13 +108,17 @@ private slots:
     void updateAddCardState();
 private:
     void onClosedChargeWindow();
-    SerialHandler *serialHandler;
-    DataBase *db;
-    BalanceHandler *balanceHandler;
-    QString currentId;
-    bool isAddingCardMode;
-    bool isChargingMode;
-    Ui::MainWindow *ui;
+    SerialHandler *serialHandler; ///< Manejador de comunicación serial.
+    DataBase *db; ///< Puntero a la base de datos utilizada para almacenar los clientes y tarjetas.
+    BalanceHandler *balanceHandler;  // BalanceHandler como atributo
+    QString currentId; ///< Almacena temporalmente el ID de la tarjeta actual.
+    bool isAddingCardMode; ///< Indica si la aplicación está en modo de agregar tarjeta.
+    bool isChargingMode; ///< Indica si la aplicación está en modo de carga de saldo.
+    Ui::MainWindow *ui; ///< Puntero a la interfaz gráfica de la ventana principal.
+    void setupFloatingGif();
+protected:
+    void resizeEvent(QResizeEvent *event) override;
+
 };
 
 #endif // MAINWINDOW_H
