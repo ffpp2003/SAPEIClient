@@ -22,8 +22,8 @@
 #include <QListWidgetItem>  // Soporte para los elementos de la lista
 #include <QMessageBox>
 #include <QDebug>
-#include <QInputDialog>    
-#include <QLineEdit>        
+#include <QInputDialog>
+#include <QLineEdit>
 #include <cstdint>
 #include <QMovie>
 #include <QTimer>
@@ -31,6 +31,10 @@
 #include <QFile>
 #include <QTextStream>
 #include <QFileInfo>
+#include <QLabel>
+#include <QGraphicsView>
+#include <QVBoxLayout>
+#include <QResizeEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -77,7 +81,6 @@ public:
     void updatePriceDisplay();
     void openBalanceDialog();
 
-
 private slots:
     /**
      * @brief Slot que maneja el evento cuando se presiona el botón para agregar una tarjeta.
@@ -112,6 +115,9 @@ private:
     bool isAddingCardMode; ///< Indica si la aplicación está en modo de agregar tarjeta.
     bool isChargingMode; ///< Indica si la aplicación está en modo de carga de saldo.
     Ui::MainWindow *ui; ///< Puntero a la interfaz gráfica de la ventana principal.
+    void setupFloatingGif();
+protected:
+    void resizeEvent(QResizeEvent *event) override;
 };
 
 #endif // MAINWINDOW_H
