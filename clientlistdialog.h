@@ -22,7 +22,7 @@ public:
     ~ClientListDialog();
 
 private slots:
-    void updateClientList();             
+    void updateClientList();
     void onSearchTextChanged(const QString &text);
     void onClientDoubleClicked(QListWidgetItem* item);
     void onEditClientButtonClicked();

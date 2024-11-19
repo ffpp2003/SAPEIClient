@@ -16,7 +16,6 @@ EditClientDialog::~EditClientDialog()
     delete ui;
 }
 
-// Métodos para obtener los datos del cliente
 QString EditClientDialog::getName() const {
     return ui->nameLineEdit->text();
 }
@@ -41,7 +40,6 @@ int EditClientDialog::getAge() const {
     return ui->ageSpinBox->value();
 }
 
-// Métodos para establecer los datos del cliente
 void EditClientDialog::setName(const QString &name) {
     ui->nameLineEdit->setText(name);
 }

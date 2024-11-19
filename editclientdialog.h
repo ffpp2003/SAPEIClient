@@ -15,7 +15,6 @@ public:
     explicit EditClientDialog(QWidget *parent = nullptr);
     ~EditClientDialog();
 
-    // Métodos para obtener los datos del cliente
     QString getName() const;
     QString getDNI() const;
     QString getEmail() const;
@@ -23,7 +22,6 @@ public:
     QString getAddress() const;
     int getAge() const;
 
-    // Métodos para establecer los datos del cliente (al abrir en modo edición)
     void setName(const QString &name);
     void setDNI(const QString &dni);
     void setEmail(const QString &email);

@@ -70,7 +70,7 @@ private slots:
     void handleReadyRead();
 
 private:
-    QSerialPort *serial; ///< Puntero al objeto QSerialPort que maneja la comunicación serie.
+    QSerialPort *serial;
 };
 
 #endif // SERIALHANDLER_H
