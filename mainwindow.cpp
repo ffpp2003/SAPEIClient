@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(balanceHandler, &BalanceHandler::balanceUpdated, this, &MainWindow::onBalanceUpdated);
     connect(balanceHandler, &BalanceHandler::balanceUpdateFailed, this, &MainWindow::onBalanceUpdateFailed);
     connect(balanceHandler, &BalanceHandler::windowClosed, this, &MainWindow::onClosedChargeWindow);
+    connect(balanceHandler, &BalanceHandler::clientNotFound, this, &MainWindow::onClientNotFound);
     connect(balanceHandler->ui.acceptButton, &QPushButton::clicked, this, &MainWindow::onClosedChargeWindow);
     connect(balanceHandler->ui.cancelButton, &QPushButton::clicked, this, &MainWindow::onClosedChargeWindow);
 
@@ -184,6 +185,10 @@ void MainWindow::onBalanceUpdated(const QString &message) {
 
 void MainWindow::onBalanceUpdateFailed(const QString &message) {
     ui->textBrowser->append("Error: " + message);
+}
+
+void MainWindow::onClientNotFound(){
+    ui->textBrowser->append("Cliente no registrado");
 }
 
 void MainWindow::changePrice(){

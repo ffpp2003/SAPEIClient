@@ -30,6 +30,7 @@ int BalanceHandler::debit(unsigned long long clientId, double amount) {
     Client client = db->getClientById(clientId);
     if (client.isNull()) {
         qDebug() << "Cliente no encontrado con ID:" << clientId;
+        emit clientNotFound();
         return TR_CLIENT_NOT_FOUND;
     }
     return updateBalance(client, -amount);

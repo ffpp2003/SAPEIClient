@@ -19,7 +19,9 @@ class BalanceHandler : public QObject {
 signals:
     void balanceUpdated(const QString &message);
     void balanceUpdateFailed(const QString &message);
-    void windowClosed();
+    void windowClosed();  
+    void clientNotFound();
+
 
 public:
     explicit BalanceHandler(DataBase *db, QObject *parent = nullptr);
