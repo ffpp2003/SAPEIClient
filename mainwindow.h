@@ -18,16 +18,16 @@
 #include "lib/SAPEICore/DataBase.h"
 #include "lib/SAPEICore/Client.h"
 #include <QMainWindow>
-#include <QListWidget>  // Añade soporte para la lista de widgets
-#include <QListWidgetItem>  // Soporte para los elementos de la lista
+#include <QListWidget>
+#include <QListWidgetItem>
 #include <QMessageBox>
 #include <QDebug>
-#include <QInputDialog>    
-#include <QLineEdit>        
+#include <QInputDialog>
+#include <QLineEdit>
 #include <cstdint>
 #include <QMovie>
 #include <QTimer>
-#include <QGraphicsTextItem>  // Asegúrate de agregar esta línea
+#include <QGraphicsTextItem>
 #include <QFile>
 #include <QTextStream>
 #include <QFileInfo>
@@ -70,7 +70,7 @@ public:
      * @param id Cadena de texto con el ID de la tarjeta.
      */
     bool addCard(const QString &id);
-    
+
 
     void addVehicleToClient();
     void changePrice();
@@ -85,7 +85,7 @@ private slots:
     void on_addCardButton_clicked();
 
 
-    void onAddVehicleButtonClicked();  // Declara el slot para abrir el diálogo de vehículo
+    void onAddVehicleButtonClicked();
     /**
      * @brief Slot que maneja el evento cuando se recibe un ID desde el puerto serie.
      * @param id Cadena de texto con el ID recibido.
@@ -96,22 +96,22 @@ private slots:
      * @brief Slot que maneja la selección del puerto serie.
      */
     void onSelectSerialPortClicked();
-    void onClientListButtonClicked();  // Declara el slot
-    void onVehicleListButtonClicked();  // Declara el slot
-    void updateConnectionStatus(); // Declaración de la función
+    void onClientListButtonClicked();
+    void onVehicleListButtonClicked();
+    void updateConnectionStatus();
     void onConfirmPriceChangeClicked();
-    void onBalanceUpdated(const QString &message);  // Slot para manejar la señal de actualización
-    void onBalanceUpdateFailed(const QString &message);  // Slot para manejar el error
+    void onBalanceUpdated(const QString &message);
+    void onBalanceUpdateFailed(const QString &message);
     void updateAddCardState();
 private:
     void onClosedChargeWindow();
-    SerialHandler *serialHandler; ///< Manejador de comunicación serial.
-    DataBase *db; ///< Puntero a la base de datos utilizada para almacenar los clientes y tarjetas.
-    BalanceHandler *balanceHandler;  // BalanceHandler como atributo
-    QString currentId; ///< Almacena temporalmente el ID de la tarjeta actual.
-    bool isAddingCardMode; ///< Indica si la aplicación está en modo de agregar tarjeta.
-    bool isChargingMode; ///< Indica si la aplicación está en modo de carga de saldo.
-    Ui::MainWindow *ui; ///< Puntero a la interfaz gráfica de la ventana principal.
+    SerialHandler *serialHandler;
+    DataBase *db;
+    BalanceHandler *balanceHandler;
+    QString currentId;
+    bool isAddingCardMode;
+    bool isChargingMode;
+    Ui::MainWindow *ui;
 };
 
 #endif // MAINWINDOW_H
