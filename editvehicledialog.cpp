@@ -6,7 +6,7 @@ EditVehicleDialog::EditVehicleDialog(QWidget *parent) :
     ui(new Ui::EditVehicleDialog)
 {
     ui->setupUi(this);
-    
+
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }

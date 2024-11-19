@@ -111,7 +111,7 @@ public:
     QString getModel() const;
 
 private:
-    Ui::AddCardDialog *ui; ///< Puntero a la interfaz de usuario del diálogo.
+    Ui::AddCardDialog *ui;
 };
 
 #endif // ADDCARDIALOG_H
